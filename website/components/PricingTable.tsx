@@ -1,3 +1,5 @@
+import { Check, X } from 'lucide-react';
+
 const plans = [
   {
     name: 'Free',
@@ -27,7 +29,7 @@ const plans = [
     period: '/mois',
     desc: 'Pour les pros et les homelabers sérieux.',
     popular: true,
-    cta: '⚡ Passer à Premium',
+    cta: 'Passer à Premium',
     ctaHref: 'https://api.myprox.app/api/v1/stripe/checkout',
     external: true,
     features: [
@@ -91,7 +93,10 @@ export default function PricingTable({ compact = false }: { compact?: boolean })
                 {plan.features.map((f) => (
                   <li key={f.label} className={`${styles.feature} ${!f.ok ? styles.featureOff : ''}`}>
                     <span className={f.ok ? styles.checkOk : styles.checkNo}>
-                      {f.ok ? '✓' : '✗'}
+                      {f.ok
+                        ? <Check size={12} color="#10B981" strokeWidth={2.5} />
+                        : <X size={12} color="#6B7280" strokeWidth={2.5} />
+                      }
                     </span>
                     {f.label}
                   </li>
