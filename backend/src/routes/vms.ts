@@ -175,4 +175,21 @@ router.delete('/:serverId/vms/:vmid', authMiddleware, async (req, res) => {
   }
 });
 
+// GET /api/v1/vms/:serverId/vnc-ticket
+// Provides PVEAuthCookie required for NoVNC webview integration on mobile
+router.get('/:serverId/vnc-ticket', authMiddleware, async (req, res) => {
+  try {
+    const { serverId } = req.params;
+    const proxmox = await getProxmoxForServer(serverId, req.userId!);
+    
+    // Will throw if using CloudProxmoxService without implemented proxy
+    const authData = proxmox.getAuthData();
+
+    res.json(authData);
+  } catch (error: any) {
+    console.error('Get VNC ticket error:', error);
+    res.status(error.statusCode || 500).json({ error: error.message || 'Failed to get VNC ticket' });
+  }
+});
+
 export default router;

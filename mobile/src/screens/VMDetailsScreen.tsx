@@ -10,19 +10,25 @@ import { useTheme } from '../utils/theme';
 import { t } from '../utils/i18n';
 
 // ── Action config ────────────────────────────────────────────────────────────
-const ACTIONS: { action: VMAction; icon: string; label: () => string; color: string; glow: string }[] = [
+const ACTIONS: { action: VMAction | 'console'; icon: string; label: () => string; color: string; glow: string }[] = [
   { action: 'start',   icon: 'play-circle',      label: () => t('vm_action_start'),   color: '#30d158', glow: '#30d15820' },
   { action: 'stop',    icon: 'stop-circle',       label: () => t('vm_action_stop'),    color: '#ff453a', glow: '#ff453a20' },
   { action: 'restart', icon: 'refresh-circle',    label: () => t('vm_action_restart'), color: '#ffa040', glow: '#ffa04020' },
+  { action: 'console', icon: 'desktop-outline',   label: () => 'Console',              color: '#0a84ff', glow: '#0a84ff20' },
 ];
 
 export const VMDetailsScreen = ({ route, navigation }: any) => {
   const { serverId, vm: initialVm } = route.params;
   const [vm] = useState<VMItem>(initialVm);
-  const [actionLoading, setActionLoading] = useState<VMAction | null>(null);
+  const [actionLoading, setActionLoading] = useState<VMAction | 'console' | null>(null);
   const colors = useTheme();
 
-  const handleAction = async (action: VMAction) => {
+  const handleAction = async (action: VMAction | 'console') => {
+    if (action === 'console') {
+      navigation.navigate('VncScreen', { serverId, node: vm.node, vmid: vm.vmid, type: vm.type });
+      return;
+    }
+
     Alert.alert(
       'Confirmation',
       `${action === 'start' ? t('vm_action_start') : action === 'stop' ? t('vm_action_stop') : t('vm_action_restart')} ?`,

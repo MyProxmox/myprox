@@ -12,6 +12,10 @@ export class CloudProxmoxService {
     return (resp as any)?.data ?? resp as T;
   }
 
+  getAuthData(): { host: string; ticket?: string; csrf?: string } {
+    throw new Error('VNC Console not currently supported in Cloud mode. Connect locally.');
+  }
+
   async getNodes() {
     return this.call<any[]>('GET', '/nodes');
   }

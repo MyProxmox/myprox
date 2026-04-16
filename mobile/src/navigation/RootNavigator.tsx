@@ -10,6 +10,7 @@ import { DashboardScreen } from '../screens/DashboardScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { VMListScreen } from '../screens/VMListScreen';
 import { VMDetailsScreen } from '../screens/VMDetailsScreen';
+import { VncScreen } from '../screens/VncScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { useAuthStore } from '../store/authStore';
 import { useAppStore } from '../store/appStore';
@@ -77,6 +78,11 @@ const DashboardStack = ({ navigation }: any) => {
         name="VMDetailsScreen"
         component={VMDetailsScreen}
         options={{ title: t('vm_details_title') }}
+      />
+      <Stack.Screen
+        name="VncScreen"
+        component={VncScreen}
+        options={{ title: 'Console', headerBackTitle: '' }}
       />
     </Stack.Navigator>
   );

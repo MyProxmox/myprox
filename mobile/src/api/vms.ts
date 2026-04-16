@@ -23,4 +23,7 @@ export const vmsApi = {
 
   action: (serverId: string, vmid: number, action: VMAction, type: 'qemu' | 'lxc', node: string) =>
     apiClient.post(`/api/v1/servers/${serverId}/vms/${vmid}/action/${action}`, { type, node }),
+
+  getVncTicket: (serverId: string) =>
+    apiClient.get<{ host: string; ticket: string; csrf: string }>(`/api/v1/servers/${serverId}/vnc-ticket`),
 };

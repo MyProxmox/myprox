@@ -11,8 +11,10 @@ export class ProxmoxService {
   private client: AxiosInstance;
   private ticket?: string;
   private csrfToken?: string;
+  public readonly host: string;
 
   private constructor(host: string) {
+    this.host = host;
     this.client = axios.create({
       baseURL: `https://${host}:8006/api2/json`,
       httpsAgent: new https.Agent({ rejectUnauthorized: false }),
@@ -37,6 +39,14 @@ export class ProxmoxService {
     this.csrfToken = data.CSRFPreventionToken;
     this.client.defaults.headers.common['Cookie'] = `PVEAuthCookie=${this.ticket}`;
     this.client.defaults.headers.common['CSRFPreventionToken'] = this.csrfToken;
+  }
+
+  getAuthData() {
+    return {
+      host: this.host,
+      ticket: this.ticket,
+      csrf: this.csrfToken,
+    };
   }
 
   async getNodes() {
