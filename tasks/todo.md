@@ -1,139 +1,161 @@
 # MyProx — Roadmap & TODO
 
-Dernière mise à jour : 2026-04-16
+Dernière mise à jour : 2026-04-16  
+Source de vérité : analyse du codebase + phase6.md + phase7.md + lessons.md
 
 ---
 
-## ✅ Fait
+## ✅ Fait (vérifié dans le code)
 
-### Phase 1 — MVP Local
-- [x] Auth (register / login / logout / refresh token)
-- [x] Dashboard serveurs
-- [x] Liste VMs & Containers
+### App Mobile
+- [x] Auth — register / login / logout / refresh token
+- [x] Dashboard serveurs avec animations spring
+- [x] Liste VMs & Containers (tabs)
 - [x] Start / Stop / Restart VM et Container
-- [x] VMDetailsScreen (stats + actions)
+- [x] VMDetailsScreen — stats + actions + bouton VNC
+- [x] VncScreen — NoVNC via WebView, rotation landscape automatique
+- [x] ServerSettingsScreen — statut nœud / APT updates / cluster logs
+- [x] OnboardingScreen — mode local/cloud toggle + agent token affiché
+- [x] SettingsScreen — plan info, dark mode toggle, logout
 - [x] ErrorBoundary
+- [x] Dark mode complet (`useTheme` + `appStore`)
+- [x] i18n fr/en (`i18n.ts`)
+- [x] TrialModal (upsell plan limit)
+- [x] `eas.json` configuré (dev / preview / production)
+- [x] `app.json` — bundleId `com.myprox.app`, version 1.0.0
+
+### Backend
+- [x] Auth routes (register, login, logout, refresh)
+- [x] Servers routes (list, add local/cloud, delete, mode toggle)
+- [x] VMs routes (list, action, vnc-ticket)
+- [x] Node routes (status, storage, APT updates, upgrade, logs)
+- [x] Cloud routes (relay-status, regenerate-token)
+- [x] Users routes, Subscriptions routes, Stripe routes
 - [x] Rate limiter (désactivé en dev)
-- [x] Compte de test seed (`test@test.test` / `test`)
+- [x] Middleware auth JWT
+- [x] ProxmoxService — auth form-urlencoded, toutes les actions VM/CT
+- [x] CloudProxmoxService — même interface via relay tunnel
+- [x] RelayService — proxy + isAgentConnected
+- [x] Encryption AES-256-CBC pour mots de passe Proxmox
+- [x] Seed dev (`npm run seed`) → compte test@test.test + serveur HomeProx
 
-### Phase 2 — Cloud Relay
-- [x] Relay Go (WebSocket tunnel)
-- [x] Agent local Go (NAT traversal)
-- [x] Mode local/cloud par serveur
-- [x] CloudProxmoxService (même interface que local)
-- [x] Agent token généré à l'ajout d'un serveur cloud
-- [x] Route relay-status
+### Relay & Agent
+- [x] Relay Go — WebSocket hub, auth JWT, proxy HTTP→WS, métriques
+- [x] Agent Go — reconnexion auto, re-auth Proxmox sur 401, concurrence goroutines
+- [x] `AGENT_SETUP.md` — guide déploiement complet
 
-### Phase 7 (partiel)
-- [x] Console VNC (NoVNC via WebView, rotation landscape)
-- [x] Node Status — CPU, RAM, stockage
-- [x] APT Updates — liste paquets + upgrade avec confirmation
-- [x] Cluster Logs — lecture `/cluster/log`
-- [x] ServerSettingsScreen (3 onglets : Statut / Mises à jour / Logs)
-- [x] Migration DB `server_type` pour PBS
-
-### DevOps
-- [x] Docker Compose (postgres + redis + api + relay)
-- [x] CI/CD GitHub Actions (test → build → deploy SSH)
-- [x] Dark mode complet
-- [x] i18n (fr/en)
+### Infrastructure
+- [x] Docker Compose complet (postgres + redis + api + relay)
+- [x] Migrations DB 001→004
+- [x] CI/CD GitHub Actions (test → build GHCR → deploy SSH)
 - [x] Production déployée via Cloudflare Tunnel
+- [x] Site vitrine Next.js — landing, pricing, docs, tous composants
 
 ---
 
 ## ⏳ À faire
 
-### 🔴 Priorité haute
+### 🔴 Priorité haute — fonctionnalités manquantes visibles
 
-#### Delete Server (quick win)
-- [ ] Bouton "Supprimer" dans DashboardScreen (swipe ou long press sur ServerCard)
-- [ ] Confirmation Alert avant suppression
-- [ ] Route backend `DELETE /api/v1/servers/:id` existe déjà ✓
-- [ ] Mettre à jour `serverStore.deleteServer`
+#### 1. Delete Server (UI manquante — route existe)
+- [ ] Swipe-to-delete ou bouton poubelle dans DashboardScreen sur ServerCard
+- [ ] Alert de confirmation avant suppression
+- [ ] `serverStore.deleteServer` existe déjà ✓, route `DELETE /api/v1/servers/:id` existe ✓
 
-#### Monitoring RRD (valeur immédiate)
-- [ ] Backend : `GET /api/v1/servers/:id/vms/:vmid/stats` — appel Proxmox `/nodes/{node}/qemu/{vmid}/rrddata`
-- [ ] Mobile : mini-graphe CPU/RAM dans VMDetailsScreen (barres simples ou `victory-native`)
+#### 2. Badge offline nœud sur Dashboard
+- [ ] Appel périodique à `/node/status` en arrière-plan (ou via refresh)
+- [ ] Badge rouge "Hors-ligne" sur ServerCard si le nœud ne répond pas
+- [ ] Mentionné dans `phase7.md` mais pas implémenté
 
-#### Tests Backend (CI ne vérifie rien sans eux)
-- [ ] `auth.test.ts` — register, login, refresh, logout
-- [ ] `servers.test.ts` — add (local), list, delete
-- [ ] `vms.test.ts` — list VMs, action start/stop
-- [ ] Config Jest + supertest déjà dans `package.json` ✓
+#### 3. Monitoring RRD — graphes CPU/RAM temps réel par VM
+- [ ] Backend : `GET /api/v1/servers/:id/vms/:vmid/stats?node=X&type=qemu` → appel Proxmox `/nodes/{node}/qemu/{vmid}/rrddata`
+- [ ] Mobile : barres ou graphe simple dans VMDetailsScreen (sans dépendance lourde)
+- [ ] Mentionné dans `phase7.md` comme fonctionnalité phare ("Real-time CPU & RAM")
+
+#### 4. Tests Backend (CI passe mais ne teste rien)
+- [ ] `backend/src/__tests__/auth.test.ts` — register, login (duplicate token bug → `lessons.md`), logout
+- [ ] `backend/src/__tests__/servers.test.ts` — add local, list, delete
+- [ ] `backend/src/__tests__/vms.test.ts` — list, action start/stop
+- [ ] Jest + supertest déjà dans `package.json` ✓, config `jest.config.ts` à créer
 
 ---
 
 ### 🟡 Priorité moyenne
 
-#### PBS — Proxmox Backup Server
-- [ ] Étendre formulaire OnboardingScreen : toggle PVE / PBS
-- [ ] Backend : routes PBS — `/datastores`, logs GC/Prune/Verify
-- [ ] Dashboard : badge distinctif 🖥️ PVE vs 💾 PBS
-- [ ] Champ `server_type` déjà en DB ✓
+#### 5. PBS — Proxmox Backup Server
+- [ ] OnboardingScreen : toggle PVE / PBS (champ `server_type` en DB ✓)
+- [ ] Backend : routes PBS
+  - `GET /api/v1/servers/:id/datastores` → `/api2/json/nodes/{node}/storage` (type=pbs)
+  - `GET /api/v1/servers/:id/tasks` → logs GC / Prune / Verify
+- [ ] Dashboard : badge 🖥️ PVE vs 💾 PBS sur ServerCard
+- [ ] Plan limits : Free = 1 PBS, Premium = illimité (mentionné dans `phase7.md`)
+- [ ] Mettre à jour PricingTable du site vitrine si nécessaire
 
-#### Push Notifications
-- [ ] Intégration `expo-notifications`
-- [ ] Backend : endpoint d'envoi via Expo Push API
-- [ ] Alertes : nœud offline, mise à jour dispo
-- [ ] Prérequis : compte Apple Developer actif (APNs)
+#### 6. Push Notifications
+- [ ] `expo-notifications` dans le mobile
+- [ ] Backend : `POST /api/v1/notifications/register` — enregistre le push token
+- [ ] Backend : logique d'envoi via Expo Push API
+- [ ] Alertes : nœud offline, mise à jour Proxmox disponible, erreur backup PBS
+- [ ] Prérequis : compte Apple Developer actif (APNs) + Firebase (Android)
 
-#### Refresh token agent cloud
-- [ ] Bouton "Régénérer le token" dans ServerSettingsScreen (cloud mode)
-- [ ] Route `POST /api/v1/cloud/regenerate-token/:id` existe déjà ✓
+#### 7. Refresh token agent (UI manquante — route existe)
+- [ ] Bouton "Régénérer le token" dans ServerSettingsScreen pour serveurs cloud
+- [ ] Afficher le nouveau token + option copier
+- [ ] Route `POST /api/v1/cloud/regenerate-token/:id` existe ✓
 
 ---
 
 ### 🟢 Priorité basse
 
-#### Site Vitrine (`/website`)
-Structure Next.js existante : `page.tsx`, `pricing/`, `docs/`
-- [ ] Landing page : hero section, features (tunnel, VNC, PBS), screenshots app, CTA download
-- [ ] Pricing page : Free vs Premium, bouton Stripe checkout
-- [ ] Docs page : guide install agent local, variables d'env, self-hosting
+#### 8. iCloud Sync (Premium)
+- [ ] `expo-secure-store` + iCloud KVS (`@react-native-community/async-storage` avec iCloud)
+- [ ] Restauration auto des serveurs sur nouvel appareil Apple (même Apple ID)
+- [ ] Limité au compte Apple de l'utilisateur — zéro accès backend
 
-#### Animations UI
-- [ ] Transition entre tabs dans VMListScreen
-- [ ] Skeleton loader sur DashboardScreen (pendant fetchServers)
-- [ ] Haptic feedback sur actions VM (start/stop)
+#### 9. Animations UI complémentaires
+- [ ] Skeleton loader DashboardScreen (remplacer ActivityIndicator)
+- [ ] Haptic feedback sur actions VM (`expo-haptics`)
+- [ ] Transition entre tabs VMListScreen
 
-#### TestFlight & Google Play Beta
-- [ ] `eas.json` configuré (preview + production profiles)
-- [ ] `app.json` : bundle ID, version, icônes finales
-- [ ] Build iOS → EAS Cloud → TestFlight
-- [ ] Build Android → EAS Cloud → Google Play Beta
-- [ ] Prérequis : compte Expo EAS + Apple Developer + Google Play Console
+#### 10. Fix mineur : relay/pkg/relay/relay.go
+- [ ] `RegisterAgent` utilise `interface{ Close() error }` au lieu de `*websocket.Conn`
+  → non bloquant car jamais appelé, mais à corriger pour cohérence
+
+#### 11. EAS Build — TestFlight & Google Play
+- [ ] `eas.json` est configuré ✓, `app.json` bundleId est défini ✓
+- [ ] Lancer `eas build --profile production --platform ios` (nécessite Expo account)
+- [ ] Soumettre à TestFlight via `eas submit --platform ios`
+- [ ] Build Android APK → Google Play Beta
 
 ---
 
 ## 🔧 CI/CD — Secrets GitHub à configurer
 
-Aller dans `Settings → Secrets and variables → Actions` du repo `MyProxmox/myprox`.
+`Settings → Secrets and variables → Actions` du repo `MyProxmox/myprox`.
 
 ### Secrets (chiffrés)
 | Nom | Valeur |
 |-----|--------|
-| `DEPLOY_PRIVATE_KEY` | Contenu de la clé SSH privée (ex: `~/.ssh/myprox_deploy`) |
+| `DEPLOY_PRIVATE_KEY` | Contenu clé SSH privée (ex: `cat ~/.ssh/myprox_deploy`) |
 
 ### Variables (non-chiffrées)
-| Nom | Valeur |
-|-----|--------|
-| `DEPLOY_HOST` | IP du VPS de production (ex: `51.x.x.x`) |
-| `DEPLOY_USER` | Utilisateur SSH (ex: `ubuntu` ou `root`) |
+| Nom | Exemple |
+|-----|---------|
+| `DEPLOY_HOST` | IP du VPS (ex: `51.x.x.x`) |
+| `DEPLOY_USER` | User SSH (ex: `ubuntu`) |
 
-### Générer une clé dédiée deploy
+### Générer une clé dédiée
 ```bash
 ssh-keygen -t ed25519 -f ~/.ssh/myprox_deploy -C "github-actions"
-# Copier la clé publique sur le VPS :
 ssh-copy-id -i ~/.ssh/myprox_deploy.pub user@VPS_IP
 ```
 
-### .env sur le VPS (à créer manuellement)
-Fichier `~/myprox/.env` — jamais dans le repo :
+### .env sur le VPS (jamais dans le repo)
 ```env
 DATABASE_URL=postgresql://myprox_user:PASS@postgres:5432/myprox
-JWT_SECRET=...           # min 32 chars
+JWT_SECRET=...              # min 32 chars
 JWT_REFRESH_SECRET=...
-ENCRYPTION_KEY=...       # exactement 32 chars
+ENCRYPTION_KEY=...          # exactement 32 chars
 API_RELAY_SECRET=...
 NODE_ENV=production
 CORS_ORIGINS=https://myprox.app
@@ -141,12 +163,15 @@ CORS_ORIGINS=https://myprox.app
 
 ---
 
-## 📋 Ordre d'exécution suggéré
+## 📋 Ordre d'exécution recommandé
 
-1. **Delete server** — 30 min, quick win visible
-2. **Monitoring RRD** — graphes dans VMDetails, très demandé
-3. **Tests backend** — débloque le CI proprement
-4. **PBS support** — différenciateur fort
-5. **Site vitrine** — nécessaire avant beta publique
-6. **EAS Build** — TestFlight en dernier
-7. **Push notifications** — nécessite Apple Developer ($99/an)
+| # | Tâche | Effort | Impact |
+|---|-------|--------|--------|
+| 1 | Delete server UI | 30 min | Fonctionnalité basique manquante |
+| 2 | Monitoring RRD | 2h | Très attendu — "real-time monitoring" |
+| 3 | Badge offline nœud | 1h | UX qualité prod |
+| 4 | Tests backend | 3h | Débloque CI réel |
+| 5 | PBS support | 4h | Différenciateur fort |
+| 6 | EAS Build iOS | 1h | TestFlight dès que prêt |
+| 7 | Push notifications | 4h | Nécessite Apple Developer ($99/an) |
+| 8 | iCloud sync | 3h | Premium feature |
