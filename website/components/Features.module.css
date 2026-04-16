@@ -1,0 +1,24 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.card { padding: 28px; }
+.iconBox {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px;
+}
+.title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.desc  { font-size: 14px; color: rgba(248,248,255,0.6); line-height: 1.6; flex: 1; margin-bottom: 16px; }
+.tags  { display: flex; gap: 8px; flex-wrap: wrap; }
+.tag   {
+  font-size: 11px; font-weight: 600;
+  padding: 3px 10px; border-radius: 50px;
+  background: rgba(255,255,255,0.06);
+  color: rgba(248,248,255,0.5);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }

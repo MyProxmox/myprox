@@ -1,0 +1,38 @@
+name: Backend CI
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'backend/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: './backend/package-lock.json'
+        
+    - name: Install dependencies
+      run: npm ci || npm install
+      
+    - name: TypeScript Compile Check
+      run: npx tsc --noEmit
+      
+    # Example for docker build
+    - name: Build Docker Image
+      run: docker build -t myprox-backend:latest .

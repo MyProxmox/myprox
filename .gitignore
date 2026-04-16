@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+out/
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# Expo / React Native
+.expo/
+.expo-shared/
+mobile/.expo/
+mobile/dist/
+mobile/web-build/
+
+# iOS / Android
+mobile/ios/
+mobile/android/
+*.ipa
+*.apk
+*.aab
+
+# Docker
+.docker/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Postgres data
+postgres_data/
+
+# Next.js
+website/.next/
+website/out/
+
+# Cloudflare Tunnel
+cloudflare/*.json
+cloudflare/*.pem

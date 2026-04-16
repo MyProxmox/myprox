@@ -1,0 +1,29 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.card {
+  padding: 36px;
+  display: flex; flex-direction: column; gap: 0;
+}
+.top { margin-bottom: 28px; }
+.planName { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(248,248,255,0.5); margin-bottom: 12px; }
+.priceRow { display: flex; align-items: baseline; gap: 4px; margin-bottom: 8px; }
+.price  { font-size: 48px; font-weight: 800; }
+.period { font-size: 16px; color: rgba(248,248,255,0.4); }
+.desc   { font-size: 14px; color: rgba(248,248,255,0.5); margin-top: 8px; }
+
+.features { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; flex: 1; }
+.feature  { display: flex; align-items: center; gap: 12px; font-size: 15px; color: rgba(248,248,255,0.85); }
+.featureOff { color: rgba(248,248,255,0.3); text-decoration: line-through; }
+.check { font-size: 13px; font-weight: 700; width: 20px; text-align: center; }
+.feature:not(.featureOff) .check { color: #4CAF50; }
+.featureOff .check { color: rgba(248,248,255,0.25); }
+
+.cta { width: 100%; justify-content: center; }
+.note { text-align: center; margin-top: 32px; font-size: 13px; color: rgba(248,248,255,0.3); }
+
+@media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }

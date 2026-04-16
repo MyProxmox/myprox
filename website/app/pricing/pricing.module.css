@@ -1,0 +1,4 @@
+.faq { display: flex; flex-direction: column; gap: 14px; max-width: 760px; margin: 0 auto; }
+.faqItem { padding: 24px 28px; }
+.faqQ { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+.faqA { font-size: 14px; color: rgba(248,248,255,0.6); line-height: 1.7; }

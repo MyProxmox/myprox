@@ -1,0 +1,13 @@
+.download { text-align: center; }
+.ctaBox {
+  padding: 72px 48px;
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex; flex-direction: column; gap: 20px; align-items: center;
+}
+.ctaBox h2 { font-size: clamp(26px, 4vw, 38px); }
+.ctaBox p  { color: rgba(248,248,255,0.6); font-size: 17px; }
+.ctaBtns   { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+.betaNote  { font-size: 13px; color: rgba(248,248,255,0.35); }
+.betaNote a { color: var(--purple-light); text-decoration: none; }
+.betaNote a:hover { text-decoration: underline; }

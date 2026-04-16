@@ -1,0 +1,78 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-myprox}
+      POSTGRES_USER: ${POSTGRES_USER:-myprox_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpass123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-myprox_user} -d ${POSTGRES_DB:-myprox}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-myprox_user}:${POSTGRES_PASSWORD:-devpass123}@postgres:5432/${POSTGRES_DB:-myprox}
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-key-minimum-32-chars!!}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-key-32-chars!!}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-dev-encryption-key-exactly32ch!}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3001}
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 3000
+      RELAY_URL: http://relay:8080
+      API_RELAY_SECRET: ${API_RELAY_SECRET:-dev-relay-secret-key-32-chars!!!}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  relay:
+    build:
+      context: ./relay
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-key-minimum-32-chars!!}
+      API_RELAY_SECRET: ${API_RELAY_SECRET:-dev-relay-secret-key-32-chars!!!}
+
+  website:
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:

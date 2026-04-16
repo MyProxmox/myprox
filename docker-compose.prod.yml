@@ -1,0 +1,54 @@
+services:
+  # ── Postgres ─────────────────────────────────────────────────────────────
+  postgres:
+    restart: always
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  # ── Redis ─────────────────────────────────────────────────────────────────
+  redis:
+    restart: always
+    logging:
+      driver: json-file
+      options: { max-size: "5m", max-file: "3" }
+
+  # ── API Backend ───────────────────────────────────────────────────────────
+  api:
+    restart: always
+    environment:
+      NODE_ENV: production
+    logging:
+      driver: json-file
+      options: { max-size: "20m", max-file: "5" }
+
+  # ── Relay Go ──────────────────────────────────────────────────────────────
+  relay:
+    restart: always
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  # ── Website Next.js ───────────────────────────────────────────────────────
+  website:
+    restart: always
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  # ── Cloudflare Tunnel ─────────────────────────────────────────────────────
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: always
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - default
+    depends_on:
+      - api
+      - website
+      - relay
+    logging:
+      driver: json-file
+      options: { max-size: "5m", max-file: "3" }

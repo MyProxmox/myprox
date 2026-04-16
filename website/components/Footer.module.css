@@ -1,0 +1,18 @@
+.footer { padding: 60px 0 40px; }
+.inner {
+  display: flex; gap: 64px;
+  padding-top: 48px;
+}
+.brand { flex: 1; }
+.tagline { margin-top: 12px; color: rgba(248,248,255,0.5); font-size: 14px; }
+.legal  { margin-top: 20px; color: rgba(248,248,255,0.3); font-size: 12px; }
+.cols   { display: flex; gap: 56px; }
+.col    { display: flex; flex-direction: column; gap: 12px; }
+.col h4 { font-size: 13px; font-weight: 700; color: rgba(248,248,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.col a  { font-size: 14px; color: rgba(248,248,255,0.6); text-decoration: none; transition: color 0.2s; }
+.col a:hover { color: #fff; }
+
+@media (max-width: 640px) {
+  .inner { flex-direction: column; gap: 40px; }
+  .cols  { flex-wrap: wrap; gap: 32px; }
+}

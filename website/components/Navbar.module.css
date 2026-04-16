@@ -1,0 +1,28 @@
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(13,11,30,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.inner {
+  display: flex; align-items: center;
+  height: 68px; gap: 40px;
+}
+.logo { flex-shrink: 0; display: flex; align-items: center; }
+.links {
+  display: flex; gap: 32px; flex: 1;
+}
+.links a {
+  font-size: 14px; font-weight: 500;
+  color: rgba(248,248,255,0.7);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.links a:hover { color: #fff; }
+.actions { display: flex; gap: 12px; align-items: center; }
+
+@media (max-width: 768px) {
+  .links { display: none; }
+  .actions .btn-outline { display: none; }
+}
