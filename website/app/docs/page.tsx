@@ -157,7 +157,7 @@ export default function DocsPage() {
                 </span>
                 Voir les tarifs
               </Link>
-              <a href="https://github.com/MyProxmox" target="_blank" rel="noopener" className={styles.sidebarLink}>
+              <a href="https://github.com/MyProxmox/myprox" target="_blank" rel="noopener" className={styles.sidebarLink}>
                 <span className={styles.sidebarIcon} style={{ color: '#818CF8' }}>
                   <GitBranch size={13} strokeWidth={2} />
                 </span>

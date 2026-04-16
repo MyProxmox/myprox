@@ -27,7 +27,7 @@ export default function Footer() {
           <div className={styles.group}>
             <div className={styles.groupTitle}>Développeurs</div>
             <Link href="/docs">Documentation</Link>
-            <a href="https://github.com/MyProxmox" target="_blank" rel="noopener noreferrer" className={styles.extLink}>
+            <a href="https://github.com/MyProxmox/myprox" target="_blank" rel="noopener noreferrer" className={styles.extLink}>
               GitHub
               <GitBranch size={12} />
             </a>
