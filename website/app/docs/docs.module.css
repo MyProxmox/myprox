@@ -9,6 +9,54 @@
 .sidebarIcon { display: inline-flex; align-items: center; justify-content: center; width: 20px; flex-shrink: 0; }
 .sidebarDivider { height: 1px; background: rgba(255,255,255,0.06); margin: 12px 0; }
 
+/* Language switcher */
+.langSwitcher {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+.langBtn {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 6px 0;
+  border-radius: 7px;
+  color: rgba(248,248,255,0.45);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.langBtn:hover {
+  color: rgba(248,248,255,0.9);
+  background: rgba(255,255,255,0.06);
+}
+.langBtnActive {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 6px 0;
+  border-radius: 7px;
+  background: var(--grad-primary);
+  color: #fff;
+  cursor: default;
+}
+.langSwitcherMobile {
+  display: none;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  width: fit-content;
+}
+
 /* Content */
 .header { margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
 .header h1 { font-size: 36px; font-weight: 800; margin-top: 8px; }
@@ -49,4 +97,5 @@
 @media (max-width: 768px) {
   .layout { grid-template-columns: 1fr; }
   .sidebar { display: none; }
+  .langSwitcherMobile { display: flex; }
 }

@@ -32,7 +32,7 @@ export default function Hero() {
           </h1>
 
           <p className={`animate-fade-up-2 ${styles.sub}`}>
-            Start, Stop, Console VNC, Monitoring temps réel — vos VMs et containers LXC dans le creux de votre main. En local ou via tunnel cloud chiffré AES-256.
+            Gérez vos VMs et containers LXC dans le creux de votre main. En local ou via notre cloud relay sécurisé.
           </p>
 
           <div className={`animate-fade-up-3 ${styles.ctas}`}>
