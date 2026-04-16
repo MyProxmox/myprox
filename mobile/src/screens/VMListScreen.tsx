@@ -8,7 +8,6 @@ import { VMCard } from '../components/VMCard';
 import { REFRESH_INTERVAL_MS } from '../utils/constants';
 import { useTheme } from '../utils/theme';
 import { t } from '../utils/i18n';
-import { Ionicons } from '@expo/vector-icons';
 
 export const VMListScreen = ({ route, navigation }: any) => {
   const { serverId, serverName } = route.params;
@@ -18,22 +17,6 @@ export const VMListScreen = ({ route, navigation }: any) => {
   const [activeTab, setActiveTab] = useState<'vms' | 'containers'>('vms');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const colors = useTheme();
-
-  useEffect(() => {
-    navigation.setOptions({
-      title: serverName || t('vms_tab'),
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ServerSettingsScreen', { serverId, serverName })}
-          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-          activeOpacity={0.5}
-          style={{ paddingRight: 4 }}
-        >
-          <Ionicons name="settings-outline" size={22} color={colors.accent} />
-        </TouchableOpacity>
-      ),
-    });
-  }, [serverName, serverId, colors.accent]);
 
   const fetchVMs = useCallback(async () => {
     try {

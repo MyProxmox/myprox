@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useColorScheme, TouchableOpacity } from 'react-native';
+import { useColorScheme, TouchableOpacity, Pressable } from 'react-native';
 import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -73,7 +73,30 @@ const DashboardStack = ({ navigation }: any) => {
       <Stack.Screen
         name="VMListScreen"
         component={VMListScreen}
-        options={{ title: t('vms_tab') }}
+        options={({ navigation, route }: any) => ({
+          title: (route.params?.serverName as string) || t('vms_tab'),
+          headerRight: () => (
+            <Pressable
+              onPress={() =>
+                navigation.navigate('ServerSettingsScreen', {
+                  serverId: route.params?.serverId,
+                  serverName: route.params?.serverName,
+                })
+              }
+              hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
+              android_ripple={null}
+              style={{ marginRight: 4, backgroundColor: 'transparent' }}
+            >
+              {({ pressed }) => (
+                <Ionicons
+                  name="settings-outline"
+                  size={22}
+                  color={pressed ? 'rgba(10,132,255,0.5)' : '#0A84FF'}
+                />
+              )}
+            </Pressable>
+          ),
+        })}
       />
       <Stack.Screen
         name="VMDetailsScreen"
