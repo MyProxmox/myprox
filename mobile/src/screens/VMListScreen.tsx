@@ -19,8 +19,18 @@ export const VMListScreen = ({ route, navigation }: any) => {
   const colors = useTheme();
 
   useEffect(() => {
-    navigation.setOptions({ title: serverName || t('vms_tab') });
-  }, [serverName]);
+    navigation.setOptions({
+      title: serverName || t('vms_tab'),
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate('ServerSettingsScreen', { serverId, serverName })}
+          style={{ marginRight: 4 }}
+        >
+          <Text style={{ fontSize: 22 }}>⚙️</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [serverName, serverId]);
 
   const fetchVMs = useCallback(async () => {
     try {

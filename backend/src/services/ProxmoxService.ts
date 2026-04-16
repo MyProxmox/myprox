@@ -103,4 +103,34 @@ export class ProxmoxService {
     const response = await this.client.delete(`/nodes/${node}/lxc/${vmid}`);
     return response.data.data;
   }
+
+  async getNodeStatus(node: string) {
+    const response = await this.client.get(`/nodes/${node}/status`);
+    return response.data.data;
+  }
+
+  async getNodeStorage(node: string) {
+    const response = await this.client.get(`/nodes/${node}/storage`);
+    return response.data.data;
+  }
+
+  async getAvailableUpdates(node: string) {
+    const response = await this.client.get(`/nodes/${node}/apt/update`);
+    return response.data.data;
+  }
+
+  async runAptRefresh(node: string) {
+    const response = await this.client.post(`/nodes/${node}/apt/update`);
+    return response.data.data;
+  }
+
+  async upgradeNode(node: string) {
+    const response = await this.client.post(`/nodes/${node}/apt/upgrade`);
+    return response.data.data;
+  }
+
+  async getClusterLog(maxItems = 50) {
+    const response = await this.client.get(`/cluster/log?max=${maxItems}`);
+    return response.data.data;
+  }
 }
