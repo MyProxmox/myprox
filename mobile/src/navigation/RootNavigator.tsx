@@ -58,6 +58,8 @@ const DashboardStack = ({ navigation }: any) => {
         headerStyle: { backgroundColor: colors.headerBg },
         headerTintColor: colors.text,
         headerShadowVisible: false,
+        headerBackTitle: '',          // ← jamais de texte libellé sur le bouton retour
+        headerBackButtonMenuEnabled: false,
       }}
     >
       <Stack.Screen
@@ -73,7 +75,10 @@ const DashboardStack = ({ navigation }: any) => {
       <Stack.Screen
         name="VMListScreen"
         component={VMListScreen}
-        options={{ headerShown: false, headerBackTitle: '' }}
+        options={({ route }: any) => ({
+          headerShown: false,
+          title: (route.params?.serverName as string) || t('vms_tab'),
+        })}
       />
       <Stack.Screen
         name="VMDetailsScreen"
@@ -83,12 +88,12 @@ const DashboardStack = ({ navigation }: any) => {
       <Stack.Screen
         name="ServerSettingsScreen"
         component={ServerSettingsScreen}
-        options={{ title: 'Nœud & Système', headerBackTitle: '' }}
+        options={{ title: 'Nœud & Système' }}
       />
       <Stack.Screen
         name="VncScreen"
         component={VncScreen}
-        options={{ title: 'Console', headerBackTitle: '' }}
+        options={{ title: 'Console' }}
       />
     </Stack.Navigator>
   );
