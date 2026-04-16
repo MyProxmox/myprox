@@ -1,10 +1,13 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const nextConfig: NextConfig = {
   output: 'standalone',
   images: {
-    unoptimized: true, // logos are local PNGs — no remote pattern needed
+    unoptimized: true,
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
