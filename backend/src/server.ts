@@ -11,6 +11,7 @@ import userRoutes from './routes/users';
 import subscriptionRoutes from './routes/subscriptions';
 import cloudRoutes from './routes/cloud';
 import nodeRoutes from './routes/nodes';
+import pbsRoutes from './routes/pbs';
 import stripeRoutes from './routes/stripe';
 import { apiLimiter, authLimiter } from './middleware/rateLimiter';
 import { errorHandler } from './middleware/errorHandler';
@@ -46,6 +47,7 @@ app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/subscriptions', subscriptionRoutes);
 app.use('/api/v1/cloud', cloudRoutes);
 app.use('/api/v1/servers', nodeRoutes);
+app.use('/api/v1/servers', pbsRoutes);
 app.use('/api/v1/stripe', stripeRoutes);
 
 // Global error handler (must be last)

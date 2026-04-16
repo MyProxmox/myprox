@@ -17,6 +17,7 @@ const light = {
   card:           '#ffffff',
   separator:      '#e5e5ea',
   danger:         '#f44336',
+  error:          '#f44336',
   success:        '#4CAF50',
   warning:        '#FF9800',
   headerBg:       '#ffffff',
@@ -38,6 +39,7 @@ const dark = {
   card:           '#1c1c1e',
   separator:      '#38383a',
   danger:         '#ff453a',
+  error:          '#ff453a',
   success:        '#30d158',
   warning:        '#ff9f0a',
   headerBg:       '#1c1c1e',
@@ -59,6 +61,7 @@ export type Theme = {
   card: string;
   separator: string;
   danger: string;
+  error: string;
   success: string;
   warning: string;
   headerBg: string;

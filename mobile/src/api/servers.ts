@@ -4,6 +4,7 @@ export interface Server {
   id: string;
   name: string;
   mode: 'local' | 'cloud';
+  server_type: 'pve' | 'pbs';
   local_ip: string;
   local_username: string;
   verified: boolean;
@@ -14,7 +15,7 @@ export const serversApi = {
   list: () =>
     apiClient.get<Server[]>('/api/v1/servers'),
 
-  add: (data: { name: string; ip: string; username: string; password: string; mode?: 'local' | 'cloud' }) =>
+  add: (data: { name: string; ip: string; username: string; password: string; mode?: 'local' | 'cloud'; server_type?: 'pve' | 'pbs' }) =>
     apiClient.post<{ server: Server; agentToken?: string; message: string }>('/api/v1/servers', data),
 
   delete: (id: string) =>

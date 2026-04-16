@@ -23,6 +23,7 @@ export const OnboardingScreen = ({ navigation }: any) => {
   const [username, setUsername] = useState('root@pam');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState<'local' | 'cloud'>('local');
+  const [serverType, setServerType] = useState<'pve' | 'pbs'>('pve');
   const [loading, setLoading] = useState(false);
   const [showTrial, setShowTrial] = useState(false);
 
@@ -37,7 +38,7 @@ export const OnboardingScreen = ({ navigation }: any) => {
 
     try {
       setLoading(true);
-      const agentToken = await addServer(name, ip, username, password, mode);
+      const agentToken = await addServer(name, ip, username, password, mode, serverType);
 
       if (mode === 'cloud' && agentToken) {
         Alert.alert(
@@ -93,12 +94,33 @@ export const OnboardingScreen = ({ navigation }: any) => {
         >
           <Text style={[styles.title, { color: colors.text }]}>{t('onboarding_title')}</Text>
           <Text style={[styles.description, { color: colors.textSecondary }]}>
-            {mode === 'local'
-              ? 'Direct connection on your local network.'
-              : 'Remote access via MyProx relay. Requires the local agent.'}
+            {serverType === 'pbs'
+              ? 'Proxmox Backup Server — manage datastores, snapshots, and backup tasks.'
+              : mode === 'local'
+                ? 'Direct connection on your local network.'
+                : 'Remote access via MyProx relay. Requires the local agent.'}
           </Text>
 
-          {/* Mode selector */}
+          {/* Server type selector */}
+          <Text style={[styles.label, { color: colors.textSecondary }]}>Server type</Text>
+          <View style={[styles.modeRow, { borderColor: colors.accent, marginBottom: 12 }]}>
+            {(['pve', 'pbs'] as const).map((st) => (
+              <TouchableOpacity
+                key={st}
+                style={[
+                  styles.modeBtn,
+                  { backgroundColor: serverType === st ? colors.accent : colors.surface },
+                ]}
+                onPress={() => setServerType(st)}
+              >
+                <Text style={[styles.modeBtnText, { color: serverType === st ? '#fff' : colors.accent }]}>
+                  {st === 'pve' ? '🖥️  Proxmox VE' : '💾  Backup Server'}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Connection mode selector */}
           <Text style={[styles.label, { color: colors.textSecondary }]}>Connection mode</Text>
           <View style={[styles.modeRow, { borderColor: colors.accent }]}>
             {(['local', 'cloud'] as const).map((m) => (

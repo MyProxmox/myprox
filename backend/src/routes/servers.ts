@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const result = await db.query(
-      'SELECT id, name, mode, local_ip, local_username, verified, last_sync, created_at FROM proxmox_servers WHERE user_id = $1 ORDER BY created_at DESC',
+      'SELECT id, name, mode, server_type, local_ip, local_username, verified, last_sync, created_at FROM proxmox_servers WHERE user_id = $1 ORDER BY created_at DESC',
       [req.userId]
     );
     res.json(result.rows);
@@ -24,7 +24,7 @@ router.get('/', authMiddleware, async (req, res) => {
 // POST /api/v1/servers
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const { name, ip, username, password, mode = 'local' } = req.body;
+    const { name, ip, username, password, mode = 'local', server_type = 'pve' } = req.body;
 
     if (!name || !ip || !username || !password) {
       return res.status(400).json({ error: 'Missing required fields: name, ip, username, password' });
@@ -32,6 +32,10 @@ router.post('/', authMiddleware, async (req, res) => {
 
     if (!['local', 'cloud'].includes(mode)) {
       return res.status(400).json({ error: 'mode must be "local" or "cloud"' });
+    }
+
+    if (!['pve', 'pbs'].includes(server_type)) {
+      return res.status(400).json({ error: 'server_type must be "pve" or "pbs"' });
     }
 
     // Enforce free plan limits
@@ -50,22 +54,38 @@ router.post('/', authMiddleware, async (req, res) => {
           error: `Free plan limit reached (${limit} ${mode} server${limit > 1 ? 's' : ''}). Upgrade to Premium.`,
         });
       }
+
+      // Free plan: 1 PBS server max
+      if (server_type === 'pbs') {
+        const pbsCount = await db.query(
+          "SELECT COUNT(*) FROM proxmox_servers WHERE user_id = $1 AND server_type = 'pbs'",
+          [req.userId]
+        );
+        if (parseInt(pbsCount.rows[0].count, 10) >= 1) {
+          return res.status(403).json({
+            error: 'Free plan limit reached (1 PBS server). Upgrade to Premium for unlimited PBS servers.',
+          });
+        }
+      }
     }
 
     // Test connection to Proxmox before saving (local mode only — cloud mode agent may not be running yet)
     if (mode === 'local') {
       const proxmox = await ProxmoxService.create({ host: ip, username, password });
-      const nodes = await proxmox.getNodes();
-      if (!nodes || nodes.length === 0) {
-        return res.status(400).json({ error: 'No nodes found on Proxmox server' });
+      if (server_type === 'pve') {
+        const nodes = await proxmox.getNodes();
+        if (!nodes || nodes.length === 0) {
+          return res.status(400).json({ error: 'No nodes found on Proxmox server' });
+        }
       }
+      // PBS: just verify auth works (getNodes doesn't apply to PBS)
     }
 
     const encryptedPassword = encryptString(password);
 
     const result = await db.query(
-      'INSERT INTO proxmox_servers (user_id, name, mode, local_ip, local_username, local_password_encrypted, verified, last_sync) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW()) RETURNING id, name, mode, local_ip, local_username, verified',
-      [req.userId, name, mode, ip, username, encryptedPassword, mode === 'local']
+      'INSERT INTO proxmox_servers (user_id, name, mode, server_type, local_ip, local_username, local_password_encrypted, verified, last_sync) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW()) RETURNING id, name, mode, server_type, local_ip, local_username, verified',
+      [req.userId, name, mode, server_type, ip, username, encryptedPassword, mode === 'local']
     );
 
     const server = result.rows[0];
