@@ -73,7 +73,17 @@ export const VncScreen = ({ route, navigation }: any) => {
         style={styles.webview}
         javaScriptEnabled={true}
         domStorageEnabled={true}
-        setIgnoreSSLErrors={true} // Needed for typical unverified Proxmox self-signed certs
+        allowsInlineMediaPlayback={true}
+        mediaPlaybackRequiresUserAction={false}
+        onError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          // Error -1202 = SSL cert invalid (Proxmox self-signed)
+          if (nativeEvent.code === -1202) {
+            setError('Certificat SSL Proxmox non reconnu.\n\nCette fonctionnalité nécessite un build natif (EAS Build).\nAvec Expo Go, iOS bloque les certificats auto-signés.');
+          } else {
+            setError(`Erreur ${nativeEvent.code}: ${nativeEvent.description}`);
+          }
+        }}
       />
     </View>
   );
