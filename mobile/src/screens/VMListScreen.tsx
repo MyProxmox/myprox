@@ -8,6 +8,7 @@ import { VMCard } from '../components/VMCard';
 import { REFRESH_INTERVAL_MS } from '../utils/constants';
 import { useTheme } from '../utils/theme';
 import { t } from '../utils/i18n';
+import { Ionicons } from '@expo/vector-icons';
 
 export const VMListScreen = ({ route, navigation }: any) => {
   const { serverId, serverName } = route.params;
@@ -26,7 +27,7 @@ export const VMListScreen = ({ route, navigation }: any) => {
           onPress={() => navigation.navigate('ServerSettingsScreen', { serverId, serverName })}
           style={{ marginRight: 4 }}
         >
-          <Text style={{ fontSize: 22 }}>⚙️</Text>
+          <Ionicons name="settings-outline" size={22} color={colors.accent} />
         </TouchableOpacity>
       ),
     });

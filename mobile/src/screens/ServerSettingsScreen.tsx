@@ -3,6 +3,7 @@ import {
   View, Text, ScrollView, StyleSheet, TouchableOpacity,
   Alert, ActivityIndicator, RefreshControl,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { nodesApi, NodeStatus, AptPackage, ClusterLogEntry } from '../api/nodes';
 
 const formatBytes = (bytes: number) => {
@@ -72,7 +73,7 @@ export const ServerSettingsScreen = ({ route }: any) => {
 
   const handleUpgrade = () => {
     Alert.alert(
-      '⚠️ Mise à jour système',
+      'Mise à jour système',
       `Cela va lancer apt dist-upgrade sur le nœud ${nodeStatus?.node}.\n\nCette opération peut prendre plusieurs minutes et nécessiter un redémarrage.\n\nContinuer ?`,
       [
         { text: 'Annuler', style: 'cancel' },
@@ -134,14 +135,14 @@ export const ServerSettingsScreen = ({ route }: any) => {
             <View style={styles.row}>
               <View style={styles.chip}><Text style={styles.chipLabel}>CPU</Text><Text style={styles.chipValue}>{Math.round(s.cpu * 100)}%</Text></View>
               <View style={styles.chip}><Text style={styles.chipLabel}>Uptime</Text><Text style={styles.chipValue}>{formatUptime(s.uptime)}</Text></View>
-              <View style={styles.chip}><Text style={styles.chipLabel}>Load</Text><Text style={styles.chipValue}>{s.loadavg?.[0]?.toFixed(2) ?? '—'}</Text></View>
+              <View style={styles.chip}><Text style={styles.chipLabel}>Load</Text><Text style={styles.chipValue}>{s.loadavg?.[0] != null ? parseFloat(String(s.loadavg[0])).toFixed(2) : '—'}</Text></View>
             </View>
 
             <StatBar label="RAM" used={s.memory.used} total={s.memory.total} />
             <StatBar label="SWAP" used={s.swap.used} total={s.swap.total} />
 
             {nodeStatus?.storage?.map((st) => (
-              <StatBar key={st.storage} label={`💾 ${st.storage} (${st.type})`} used={st.used} total={st.total} warn={0.85} />
+              <StatBar key={st.storage} label={`${st.storage} (${st.type})`} used={st.used} total={st.total} warn={0.85} />
             ))}
 
             <Text style={styles.meta}>{s.pveversion} — {s.kversion}</Text>
@@ -164,7 +165,10 @@ export const ServerSettingsScreen = ({ route }: any) => {
             </View>
 
             {updates.length === 0 ? (
-              <Text style={styles.empty}>Système à jour ✓</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <Ionicons name="checkmark-circle-outline" size={18} color="#4CAF50" />
+                <Text style={styles.empty}>Système à jour</Text>
+              </View>
             ) : (
               updates.map((pkg) => (
                 <View key={pkg.Package} style={styles.pkgRow}>

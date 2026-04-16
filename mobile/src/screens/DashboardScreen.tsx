@@ -30,10 +30,11 @@ const AnimatedServerCard = ({
     ]).start();
   }, []);
 
-  const modeIcon = server.mode === 'cloud' ? '☁' : '⌂';
+  const modeIconName = server.mode === 'cloud' ? 'cloud-outline' : 'home-outline';
   const modeColor = server.mode === 'cloud' ? colors.accent : colors.success;
   const modeLabel = server.mode === 'cloud' ? t('dashboard_mode_cloud') : t('dashboard_mode_local');
-  const typeLabel = server.server_type === 'pbs' ? '💾 PBS' : '🖥️ PVE';
+  const typeIconName = server.server_type === 'pbs' ? 'archive-outline' : 'desktop-outline';
+  const typeLabel = server.server_type === 'pbs' ? 'PBS' : 'PVE';
   const typeColor = server.server_type === 'pbs' ? '#8B5CF6' : colors.textTertiary;
 
   return (
@@ -47,7 +48,7 @@ const AnimatedServerCard = ({
       >
         <View style={styles.cardTop}>
           <View style={[styles.modeIcon, { backgroundColor: modeColor + '20' }]}>
-            <Text style={[styles.modeEmoji, { color: modeColor }]}>{modeIcon}</Text>
+            <Ionicons name={modeIconName as any} size={22} color={modeColor} />
           </View>
           <View style={styles.cardInfo}>
             <Text style={[styles.cardName, { color: colors.text }]}>{server.name}</Text>
@@ -63,16 +64,24 @@ const AnimatedServerCard = ({
               styles.verifiedBadge,
               { backgroundColor: server.verified ? colors.success + '20' : colors.warning + '20' },
             ]}>
-              <Text style={{ fontSize: 13, fontWeight: '700', color: server.verified ? colors.success : colors.warning }}>
-                {server.verified ? '✓' : '!'}
-              </Text>
+              <Ionicons
+                name={server.verified ? 'checkmark' : 'alert'}
+                size={14}
+                color={server.verified ? colors.success : colors.warning}
+              />
             </View>
           </View>
         </View>
         <View style={styles.cardFooter}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <Text style={[styles.modePill, { color: modeColor }]}>{modeLabel}</Text>
-            <Text style={[styles.typePill, { color: typeColor }]}>{typeLabel}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Ionicons name={modeIconName as any} size={12} color={modeColor} />
+              <Text style={[styles.modePill, { color: modeColor }]}>{modeLabel}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Ionicons name={typeIconName as any} size={12} color={typeColor} />
+              <Text style={[styles.typePill, { color: typeColor }]}>{typeLabel}</Text>
+            </View>
           </View>
           {server.last_sync && (
             <Text style={[styles.syncText, { color: colors.textTertiary }]}>
@@ -151,7 +160,7 @@ export const DashboardScreen = ({ navigation }: any) => {
 
       {servers.length === 0 && !loading ? (
         <View style={styles.emptyState}>
-          <Text style={styles.emptyIcon}>🖥️</Text>
+          <Ionicons name="desktop-outline" size={56} color={colors.textTertiary} style={{ marginBottom: 16 }} />
           <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('dashboard_empty_title')}</Text>
           <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('dashboard_empty_sub')}</Text>
           <TouchableOpacity
@@ -226,7 +235,7 @@ const styles = StyleSheet.create({
   },
   cardTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
   modeIcon: { width: 44, height: 44, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
-  modeEmoji: { fontSize: 22 },
+
   cardInfo: { flex: 1 },
   cardName: { fontSize: 16, fontWeight: '700', marginBottom: 2 },
   cardSub: { fontSize: 13 },
@@ -239,7 +248,7 @@ const styles = StyleSheet.create({
   typePill: { fontSize: 12, fontWeight: '600' },
   syncText: { fontSize: 11 },
   emptyState: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 32 },
-  emptyIcon: { fontSize: 56, marginBottom: 16 },
+
   emptyTitle: { fontSize: 22, fontWeight: '700', marginBottom: 8 },
   emptyText: { fontSize: 15, marginBottom: 32, textAlign: 'center' },
   addButton: { paddingHorizontal: 32, paddingVertical: 14, borderRadius: 12 },

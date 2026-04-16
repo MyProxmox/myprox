@@ -35,3 +35,25 @@ Pour toute tâche 3+ étapes :
 1. Écrire le plan dans `tasks/todo.md`
 2. Présenter les grandes lignes à l'utilisateur
 3. Attendre une confirmation explicite avant de coder
+
+---
+
+## Leçon 3 : Pas d'emojis dans l'UI — utiliser Ionicons (2026-04-16)
+
+### Règle
+**Ne jamais utiliser d'emojis dans le code UI de l'app mobile.** Utiliser exclusivement `Ionicons` de `@expo/vector-icons` pour tous les pictogrammes, icônes d'état, badges, et indicateurs visuels.
+
+### Correspondances courantes
+| Usage | Emoji retiré | Ionicons name |
+|-------|-------------|---------------|
+| Mode cloud | `☁` | `cloud-outline` |
+| Mode local | `⌂` | `home-outline` |
+| Proxmox VE | `🖥️` | `desktop-outline` |
+| PBS | `💾` | `archive-outline` |
+| Vérifié | `✓` | `checkmark` / `checkmark-circle` |
+| Alerte | `!` / `⚠️` | `alert` / `alert-circle-outline` |
+| Paramètres | `⚙️` | `settings-outline` |
+| Succès/à jour | `✓` | `checkmark-circle-outline` |
+
+### Pourquoi
+Rendu incohérent cross-platform, taille non contrôlée, thème non respecté. Ionicons s'intègre avec les couleurs du thème et garantit un rendu identique sur iOS et Android.

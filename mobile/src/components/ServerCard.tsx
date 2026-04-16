@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Server } from '../api/servers';
 
 interface Props {
@@ -12,13 +13,25 @@ export const ServerCard = ({ server, onPress }: Props) => (
     <View style={styles.top}>
       <Text style={styles.name}>{server.name}</Text>
       <View style={[styles.badge, server.verified ? styles.badgeOk : styles.badgeWarn]}>
-        <Text style={styles.badgeText}>{server.verified ? '✓ Vérifié' : 'Non vérifié'}</Text>
+        <Ionicons
+          name={server.verified ? 'checkmark-circle' : 'alert-circle-outline'}
+          size={13}
+          color={server.verified ? '#388e3c' : '#f57c00'}
+          style={{ marginRight: 3 }}
+        />
+        <Text style={styles.badgeText}>{server.verified ? 'Vérifié' : 'Non vérifié'}</Text>
       </View>
     </View>
     <Text style={styles.ip}>{server.local_ip}</Text>
     <View style={styles.footer}>
       <View style={[styles.modeBadge, server.mode === 'cloud' ? styles.modeCloud : styles.modeLocal]}>
-        <Text style={styles.modeText}>{server.mode === 'cloud' ? '☁ Cloud' : '⌂ Local'}</Text>
+        <Ionicons
+          name={server.mode === 'cloud' ? 'cloud-outline' : 'home-outline'}
+          size={12}
+          color="#333"
+          style={{ marginRight: 3 }}
+        />
+        <Text style={styles.modeText}>{server.mode === 'cloud' ? 'Cloud' : 'Local'}</Text>
       </View>
     </View>
   </TouchableOpacity>
@@ -47,11 +60,11 @@ const styles = StyleSheet.create({
   name: { fontSize: 17, fontWeight: '600', color: '#1c1c1e', flex: 1 },
   ip: { fontSize: 14, color: '#666', marginBottom: 8 },
   footer: { flexDirection: 'row' },
-  modeBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
+  modeBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, flexDirection: 'row', alignItems: 'center' },
   modeLocal: { backgroundColor: '#e8f5e9' },
   modeCloud: { backgroundColor: '#e3f2fd' },
   modeText: { fontSize: 11, fontWeight: '600', color: '#333' },
-  badge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
+  badge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, flexDirection: 'row', alignItems: 'center' },
   badgeOk: { backgroundColor: '#e8f5e9' },
   badgeWarn: { backgroundColor: '#fff3e0' },
   badgeText: { fontSize: 11, fontWeight: '600', color: '#333' },

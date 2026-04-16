@@ -4,6 +4,7 @@ import {
   StyleSheet, Alert, ScrollView, ActivityIndicator,
   KeyboardAvoidingView, Platform, Linking,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import { useServerStore } from '../store/serverStore';
 import { useTheme } from '../utils/theme';
@@ -113,9 +114,16 @@ export const OnboardingScreen = ({ navigation }: any) => {
                 ]}
                 onPress={() => setServerType(st)}
               >
-                <Text style={[styles.modeBtnText, { color: serverType === st ? '#fff' : colors.accent }]}>
-                  {st === 'pve' ? '🖥️  Proxmox VE' : '💾  Backup Server'}
-                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                  <Ionicons
+                    name={st === 'pve' ? 'desktop-outline' : 'archive-outline'}
+                    size={16}
+                    color={serverType === st ? '#fff' : colors.accent}
+                  />
+                  <Text style={[styles.modeBtnText, { color: serverType === st ? '#fff' : colors.accent }]}>
+                    {st === 'pve' ? 'Proxmox VE' : 'Backup Server'}
+                  </Text>
+                </View>
               </TouchableOpacity>
             ))}
           </View>
