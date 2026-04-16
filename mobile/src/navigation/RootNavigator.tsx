@@ -83,7 +83,7 @@ const DashboardStack = ({ navigation }: any) => {
       <Stack.Screen
         name="ServerSettingsScreen"
         component={ServerSettingsScreen}
-        options={{ title: 'Nœud & Système' }}
+        options={{ title: 'Nœud & Système', headerBackTitle: '' }}
       />
       <Stack.Screen
         name="VncScreen"
