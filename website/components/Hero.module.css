@@ -1,66 +1,163 @@
-.hero { padding-top: 160px; min-height: 100vh; }
+.hero { padding-top: 80px; padding-bottom: 120px; }
+
 .inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
   align-items: center;
-  position: relative;
-  z-index: 1;
 }
-.copy { display: flex; flex-direction: column; gap: 24px; }
+
+/* ── Copy ── */
+.copy { display: flex; flex-direction: column; gap: 28px; }
+
 .headline {
   font-size: clamp(38px, 6vw, 64px);
-  font-weight: 800;
-  letter-spacing: -1.5px;
-  line-height: 1.1;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
+
 .sub {
   font-size: 18px;
-  color: rgba(248,248,255,0.65);
-  line-height: 1.7;
+  color: var(--text-muted);
+  line-height: 1.8;
   max-width: 480px;
 }
-.ctas { display: flex; gap: 14px; flex-wrap: wrap; }
-.stats { display: flex; gap: 36px; padding-top: 8px; }
-.stat  { display: flex; flex-direction: column; gap: 4px; }
-.statValue { font-size: 24px; font-weight: 800; }
-.statLabel { font-size: 12px; color: rgba(248,248,255,0.45); font-weight: 500; letter-spacing: 0.5px; }
 
-/* Visual */
+.ctas { display: flex; flex-wrap: wrap; gap: 14px; }
+
+.stats {
+  display: flex;
+  gap: 32px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.stat { display: flex; flex-direction: column; gap: 3px; }
+.statValue { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+.statLabel  { font-size: 12px; color: var(--text-dim); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ── Visual ── */
 .visual {
-  display: flex; justify-content: center; align-items: center;
   position: relative;
-}
-.logoWrap {
-  position: relative;
-  width: 300px; height: 300px;
-  display: flex; align-items: center; justify-content: center;
-}
-.glow {
-  position: absolute; inset: -40px;
-  background: radial-gradient(circle, rgba(124,58,237,0.35) 0%, transparent 70%);
-  border-radius: 50%;
-  animation: pulse-glow 3s ease-in-out infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Floating badges */
-.floatBadge {
+/* ── Phone Mockup ── */
+.phone {
+  width: 260px;
+  background: #0F1423;
+  border-radius: 36px;
+  border: 2px solid rgba(255,255,255,0.1);
+  box-shadow:
+    0 0 0 6px rgba(255,255,255,0.03),
+    0 40px 100px rgba(0,0,0,0.6),
+    0 0 60px rgba(99,102,241,0.15);
+  overflow: hidden;
+  position: relative;
+}
+
+.phoneNotch {
+  width: 80px;
+  height: 22px;
+  background: #0F1423;
+  border-radius: 0 0 16px 16px;
+  margin: 0 auto;
+  border: 2px solid rgba(255,255,255,0.08);
+  border-top: none;
+  position: relative;
+  z-index: 2;
+}
+
+.phoneScreen {
+  padding: 14px 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* App Header */
+.appHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.appTitle { font-size: 14px; font-weight: 700; color: var(--text); }
+.appSub   { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
+.appPill  {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 600; color: #34D399;
+  background: rgba(16,185,129,0.12);
+  border: 1px solid rgba(16,185,129,0.2);
+  padding: 3px 8px; border-radius: 20px;
+}
+
+/* VM List */
+.vmList { display: flex; flex-direction: column; gap: 8px; }
+.vmRow  {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+}
+.vmLeft  { display: flex; align-items: center; gap: 8px; }
+.vmDot   { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.vmName  { font-size: 11px; font-weight: 600; color: var(--text); }
+.vmRight { display: flex; align-items: center; gap: 6px; }
+.metricBar {
+  width: 40px; height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px; overflow: hidden;
+}
+.barFill { height: 100%; border-radius: 2px; transition: width 0.5s; }
+.metricText { font-size: 10px; color: var(--text-muted); font-weight: 600; min-width: 22px; }
+.statusBadgeStopped {
+  font-size: 10px; color: var(--text-dim);
+  background: rgba(255,255,255,0.05);
+  padding: 2px 7px; border-radius: 6px;
+}
+
+/* VNC Badge */
+.vncBadge {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(6,182,212,0.1));
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 12px;
+  cursor: pointer;
+}
+.vncTitle  { font-size: 11px; font-weight: 700; color: var(--text); }
+.vncSub    { font-size: 9px; color: var(--text-muted); margin-top: 1px; }
+.vncArrow  { margin-left: auto; font-size: 18px; color: var(--indigo-light); }
+
+/* ── Floating Cards ── */
+.floatCard {
   position: absolute;
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 16px; border-radius: 50px;
-  font-size: 13px; font-weight: 600;
-  white-space: nowrap;
-  animation: fadeUp 0.7s ease both;
-}
-.floatBadge1 { bottom: 30px; left: -20px; animation-delay: 0.5s; }
-.floatBadge2 { top: 40px; right: -10px; animation-delay: 0.7s; }
-.dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  animation: pulse-glow 2s ease-in-out infinite;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  min-width: 160px;
 }
 
-@media (max-width: 768px) {
-  .inner { grid-template-columns: 1fr; }
-  .visual { display: none; }
-  .hero { padding-top: 120px; min-height: auto; }
+.floatTitle { font-size: 12px; font-weight: 700; color: var(--text); }
+.floatSub   { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+.floatCard1 {
+  bottom: -20px; left: -30px;
+  animation: float 4s 0.5s ease-in-out infinite;
+}
+.floatCard2 {
+  top: 20px; right: -30px;
+  animation: float 4s 1.2s ease-in-out infinite;
+}
+
+@media (max-width: 900px) {
+  .inner { grid-template-columns: 1fr; gap: 60px; }
+  .visual { order: -1; }
+  .floatCard1 { left: 0; }
+  .floatCard2 { right: 0; }
 }

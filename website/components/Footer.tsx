@@ -1,34 +1,48 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Footer.module.css';
 
 export default function Footer() {
   return (
     <footer className={styles.footer}>
-      <div className="divider" />
       <div className={`container ${styles.inner}`}>
+        {/* Brand */}
         <div className={styles.brand}>
-          <Image src="/logo-horizontal.png" alt="MyProx" width={110} height={30} />
-          <p className={styles.tagline}>Gérez votre Proxmox depuis votre poche.</p>
-          <p className={styles.legal}>© {new Date().getFullYear()} MyProx. Tous droits réservés.</p>
+          <div className={styles.logoMark}>M</div>
+          <div>
+            <div className={styles.logoText}>MyProx</div>
+            <div className={styles.tagline}>Proxmox dans votre poche.</div>
+          </div>
         </div>
-        <div className={styles.cols}>
-          <div className={styles.col}>
-            <h4>Produit</h4>
+
+        {/* Links */}
+        <div className={styles.links}>
+          <div className={styles.group}>
+            <div className={styles.groupTitle}>Produit</div>
             <Link href="/#features">Fonctionnalités</Link>
+            <Link href="/#how">Comment ça marche</Link>
             <Link href="/pricing">Tarifs</Link>
+            <Link href="/#roadmap">Roadmap</Link>
+          </div>
+          <div className={styles.group}>
+            <div className={styles.groupTitle}>Développeurs</div>
             <Link href="/docs">Documentation</Link>
+            <a href="https://github.com/MyProxmox" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <Link href="/docs#agent">Déployer l&apos;agent</Link>
           </div>
-          <div className={styles.col}>
-            <h4>Légal</h4>
-            <Link href="/privacy">Confidentialité</Link>
-            <Link href="/terms">CGU</Link>
+          <div className={styles.group}>
+            <div className={styles.groupTitle}>Légal</div>
+            <Link href="/legal/privacy">Confidentialité</Link>
+            <Link href="/legal/terms">CGU</Link>
           </div>
-          <div className={styles.col}>
-            <h4>Communauté</h4>
-            <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://discord.com" target="_blank" rel="noopener">Discord</a>
-          </div>
+        </div>
+      </div>
+
+      {/* Bottom bar */}
+      <div className={`container ${styles.bottom}`}>
+        <span>© 2024–2026 MyProx. Tous droits réservés.</span>
+        <div className={styles.status}>
+          <span className="status-dot" style={{ background: '#10B981' }} />
+          <span>api.myprox.app · Opérationnel</span>
         </div>
       </div>
     </footer>

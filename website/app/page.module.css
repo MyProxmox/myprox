@@ -1,13 +1,46 @@
-.download { text-align: center; }
-.ctaBox {
-  padding: 72px 48px;
-  max-width: 680px;
-  margin: 0 auto;
-  display: flex; flex-direction: column; gap: 20px; align-items: center;
+.download {
+  padding-top: 80px;
 }
-.ctaBox h2 { font-size: clamp(26px, 4vw, 38px); }
-.ctaBox p  { color: rgba(248,248,255,0.6); font-size: 17px; }
-.ctaBtns   { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
-.betaNote  { font-size: 13px; color: rgba(248,248,255,0.35); }
-.betaNote a { color: var(--purple-light); text-decoration: none; }
-.betaNote a:hover { text-decoration: underline; }
+
+.ctaBox {
+  padding: 64px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(6,182,212,0.05));
+  border-color: rgba(99,102,241,0.2);
+}
+
+.ctaBox h2 {
+  font-size: clamp(28px, 5vw, 46px);
+  line-height: 1.15;
+}
+
+.ctaBox p {
+  font-size: 17px;
+  color: var(--text-muted);
+  max-width: 480px;
+  line-height: 1.75;
+}
+
+.ctaBtns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.betaNote {
+  font-size: 13px !important;
+  color: var(--text-dim) !important;
+  margin-top: -4px;
+}
+
+.betaNote a {
+  color: var(--indigo-light);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

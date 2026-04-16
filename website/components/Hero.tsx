@@ -1,62 +1,133 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Hero.module.css';
 
+const stats = [
+  { value: '100%', label: 'Open Source', color: '#10B981' },
+  { value: 'AES-256', label: 'Chiffrement End-to-End', color: '#6366F1' },
+  { value: 'Live', label: 'Production mondiale', color: '#06B6D4' },
+];
+
+const liveVMs = [
+  { name: 'k3s-master',  status: 'running', cpu: 28, ram: 52 },
+  { name: 'plex-media',  status: 'running', cpu: 8,  ram: 34 },
+  { name: 'win-gaming',  status: 'stopped', cpu: 0,  ram: 0  },
+];
+
 export default function Hero() {
   return (
-    <section className={`section glow-bg ${styles.hero}`}>
+    <section className={`section glow-bg glow-bg-b ${styles.hero}`}>
       <div className={`container ${styles.inner}`}>
-        {/* Left: copy */}
+
+        {/* ── Left Copy ── */}
         <div className={styles.copy}>
-          <div className="badge animate-fade-up">✦ Nouveauté — Mode Cloud disponible</div>
+          <div className={`badge badge-green animate-fade-up`}>
+            <span className="status-dot" style={{ background: '#10B981' }} />
+            v1.0 · Disponible en Bêta
+          </div>
 
           <h1 className={`animate-fade-up-1 ${styles.headline}`}>
-            Votre Proxmox,<br />
-            <span className="grad-text">dans votre poche</span>
+            Pilotez Proxmox<br />
+            <span className="grad-text">depuis votre poche</span>
           </h1>
 
           <p className={`animate-fade-up-2 ${styles.sub}`}>
-            Gérez vos VMs, containers LXC et nodes Proxmox directement depuis votre iPhone ou Android.
-            En local ou via tunnel cloud sécurisé — partout, tout le temps.
+            Start, Stop, Console VNC, Monitoring temps réel — vos VMs et containers LXC dans le creux de votre main. En local ou via tunnel cloud chiffré AES-256.
           </p>
 
           <div className={`animate-fade-up-3 ${styles.ctas}`}>
             <a href="#download" className="btn btn-primary">
-              📱 Télécharger l'app
+              📱 Télécharger la Bêta
             </a>
             <Link href="/docs" className="btn btn-outline">
               Voir la doc →
             </Link>
           </div>
 
-          <div className={`animate-fade-up-3 ${styles.stats}`}>
-            {[
-              { value: '100%', label: 'Open Source' },
-              { value: 'AES-256', label: 'Chiffrement' },
-              { value: '0€', label: 'Pour commencer' },
-            ].map((s) => (
+          <div className={`animate-fade-up-4 ${styles.stats}`}>
+            {stats.map((s) => (
               <div key={s.label} className={styles.stat}>
-                <span className={`grad-text ${styles.statValue}`}>{s.value}</span>
+                <span className={styles.statValue} style={{ color: s.color }}>{s.value}</span>
                 <span className={styles.statLabel}>{s.label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Right: logo flottant */}
+        {/* ── Right Visual: App Mockup ── */}
         <div className={`animate-float ${styles.visual}`}>
-          <div className={styles.logoWrap}>
-            <Image src="/logo.png" alt="MyProx" width={300} height={300} priority />
-            <div className={styles.glow} />
+          {/* Phone frame */}
+          <div className={styles.phone}>
+            <div className={styles.phoneNotch} />
+            <div className={styles.phoneScreen}>
+              {/* Header */}
+              <div className={styles.appHeader}>
+                <div>
+                  <div className={styles.appTitle}>Mes Serveurs</div>
+                  <div className={styles.appSub}>Proxmox Home Lab</div>
+                </div>
+                <div className={styles.appPill}>
+                  <span className="status-dot" style={{ background: '#10B981' }} />
+                  En ligne
+                </div>
+              </div>
+
+              {/* VM List */}
+              <div className={styles.vmList}>
+                {liveVMs.map((vm) => (
+                  <div key={vm.name} className={styles.vmRow}>
+                    <div className={styles.vmLeft}>
+                      <span
+                        className={styles.vmDot}
+                        style={{ background: vm.status === 'running' ? '#10B981' : '#6B7280' }}
+                      />
+                      <span className={styles.vmName}>{vm.name}</span>
+                    </div>
+                    <div className={styles.vmRight}>
+                      {vm.status === 'running' ? (
+                        <>
+                          <div className={styles.metricBar}>
+                            <div className={styles.barFill} style={{
+                              width: `${vm.cpu}%`,
+                              background: vm.cpu > 60 ? '#EF4444' : vm.cpu > 30 ? '#F59E0B' : '#10B981'
+                            }} />
+                          </div>
+                          <span className={styles.metricText}>{vm.cpu}%</span>
+                        </>
+                      ) : (
+                        <span className={styles.statusBadgeStopped}>Arrêtée</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* VNC Console Badge */}
+              <div className={styles.vncBadge}>
+                <span>🖥</span>
+                <div>
+                  <div className={styles.vncTitle}>Console VNC</div>
+                  <div className={styles.vncSub}>Accès direct — k3s-master</div>
+                </div>
+                <div className={styles.vncArrow}>›</div>
+              </div>
+            </div>
           </div>
 
-          {/* Floating badges */}
-          <div className={`glass ${styles.floatBadge} ${styles.floatBadge1}`}>
-            <span className={styles.dot} style={{ background: '#4CAF50' }} />
-            3 VMs running
+          {/* Floating decorations */}
+          <div className={`glass ${styles.floatCard} ${styles.floatCard1}`}>
+            <span style={{ fontSize: 18 }}>💾</span>
+            <div>
+              <div className={styles.floatTitle}>PBS Backup</div>
+              <div className={styles.floatSub}>Hier · Succès</div>
+            </div>
           </div>
-          <div className={`glass ${styles.floatBadge} ${styles.floatBadge2}`}>
-            ☁ Cloud connecté
+
+          <div className={`glass ${styles.floatCard} ${styles.floatCard2}`}>
+            <span style={{ fontSize: 18 }}>☁</span>
+            <div>
+              <div className={styles.floatTitle}>Cloud Relay</div>
+              <div className={styles.floatSub}>Paris — 12ms</div>
+            </div>
           </div>
         </div>
       </div>

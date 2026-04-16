@@ -193,3 +193,26 @@ router.get('/:serverId/vnc-ticket', authMiddleware, async (req, res) => {
 });
 
 export default router;
+
+// GET /api/v1/servers/:serverId/vms/:vmid/stats
+// RRD data: CPU, RAM, disk I/O, net I/O over time
+// Query params: node (required), type (qemu|lxc), timeframe (hour|day|week)
+router.get('/:serverId/vms/:vmid/stats', authMiddleware, async (req, res) => {
+  try {
+    const { serverId, vmid } = req.params;
+    const { node, type = 'qemu', timeframe = 'hour' } = req.query as Record<string, string>;
+
+    if (!node) return res.status(400).json({ error: 'node is required' });
+
+    const proxmox = await getProxmoxForServer(serverId, req.userId!);
+    if (proxmox instanceof (await import('../services/CloudProxmoxService')).CloudProxmoxService) {
+      return res.status(400).json({ error: 'RRD stats not available in cloud mode' });
+    }
+
+    const stats = await (proxmox as any).getVMStats(node, parseInt(vmid, 10), type as 'qemu' | 'lxc', timeframe);
+    res.json({ stats: stats ?? [] });
+  } catch (error: any) {
+    const status = error.statusCode || 500;
+    res.status(status).json({ error: error.message || 'Failed to fetch stats' });
+  }
+});

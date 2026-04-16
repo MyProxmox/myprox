@@ -133,4 +133,11 @@ export class ProxmoxService {
     const response = await this.client.get(`/cluster/log?max=${maxItems}`);
     return response.data.data;
   }
+
+  async getVMStats(node: string, vmid: number, type: 'qemu' | 'lxc' = 'qemu', timeframe = 'hour') {
+    const response = await this.client.get(
+      `/nodes/${node}/${type}/${vmid}/rrddata?timeframe=${timeframe}&cf=AVERAGE`
+    );
+    return response.data.data;
+  }
 }

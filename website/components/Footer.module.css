@@ -1,18 +1,103 @@
-.footer { padding: 60px 0 40px; }
-.inner {
-  display: flex; gap: 64px;
-  padding-top: 48px;
+.footer {
+  border-top: 1px solid var(--border);
+  padding-top: 60px;
 }
-.brand { flex: 1; }
-.tagline { margin-top: 12px; color: rgba(248,248,255,0.5); font-size: 14px; }
-.legal  { margin-top: 20px; color: rgba(248,248,255,0.3); font-size: 12px; }
-.cols   { display: flex; gap: 56px; }
-.col    { display: flex; flex-direction: column; gap: 12px; }
-.col h4 { font-size: 13px; font-weight: 700; color: rgba(248,248,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-.col a  { font-size: 14px; color: rgba(248,248,255,0.6); text-decoration: none; transition: color 0.2s; }
-.col a:hover { color: #fff; }
 
-@media (max-width: 640px) {
+.inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 80px;
+  padding-bottom: 48px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.logoMark {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6366F1, #7C3AED);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(99,102,241,0.4);
+  flex-shrink: 0;
+}
+
+.logoText {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.tagline {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+
+.links {
+  display: flex;
+  gap: 60px;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.groupTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+
+.group a {
+  font-size: 14px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.group a:hover {
+  color: var(--text);
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #34D399;
+}
+
+@media (max-width: 900px) {
   .inner { flex-direction: column; gap: 40px; }
-  .cols  { flex-wrap: wrap; gap: 32px; }
+  .links { justify-content: flex-start; flex-wrap: wrap; gap: 32px; }
+  .bottom { flex-direction: column; gap: 12px; text-align: center; }
 }

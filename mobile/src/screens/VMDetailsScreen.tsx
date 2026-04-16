@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, StyleSheet,
   TouchableOpacity, Alert, ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { VMItem, VMAction, vmsApi } from '../api/vms';
+import { vmStatsApi, RRDPoint } from '../api/nodes';
 import { formatCPU, formatBytes, formatUptime, getStatusColor } from '../utils/formatting';
 import { useTheme } from '../utils/theme';
 import { t } from '../utils/i18n';
@@ -21,6 +22,7 @@ export const VMDetailsScreen = ({ route, navigation }: any) => {
   const { serverId, vm: initialVm } = route.params;
   const [vm] = useState<VMItem>(initialVm);
   const [actionLoading, setActionLoading] = useState<VMAction | 'console' | null>(null);
+  const [stats, setStats] = useState<RRDPoint[]>([]);
   const colors = useTheme();
 
   const handleAction = async (action: VMAction | 'console') => {
@@ -54,7 +56,15 @@ export const VMDetailsScreen = ({ route, navigation }: any) => {
     );
   };
 
-  const statusColor = getStatusColor(vm.status);
+
+  useEffect(() => {
+    if (vm.status !== 'running') return;
+    vmStatsApi.get(serverId, vm.vmid, vm.node, vm.type)
+      .then(({ data }) => setStats(data.stats ?? []))
+      .catch(() => {});
+  }, [vm.vmid]);
+
+    const statusColor = getStatusColor(vm.status);
 
   return (
     <ScrollView
@@ -137,11 +147,62 @@ export const VMDetailsScreen = ({ route, navigation }: any) => {
           )}
         </Section>
       )}
+
+      {/* ── RRD Stats ─────────────────────────────────── */}
+      {stats.length > 0 && (
+        <Section title="Monitoring" colors={colors}>
+          <View style={{ padding: 16 }}>
+            <MiniChart
+              data={stats.map((p) => (p.cpu ?? 0) * 100)}
+              color="#0a84ff"
+              label="CPU %"
+              max={100}
+              format={(v) => `${v.toFixed(1)}%`}
+            />
+            <MiniChart
+              data={stats.map((p) => p.maxmem ? (p.mem ?? 0) / p.maxmem * 100 : 0)}
+              color="#30d158"
+              label="RAM %"
+              max={100}
+              format={(v) => `${v.toFixed(1)}%`}
+            />
+          </View>
+        </Section>
+      )}
     </ScrollView>
   );
 };
 
 // ── Sub-components ────────────────────────────────────────────────────────────
+
+const MiniChart = ({ data, color, label, max, format }: {
+  data: number[]; color: string; label: string; max: number; format: (v: number) => string;
+}) => {
+  const last = data[data.length - 1] ?? 0;
+  const BARS = 20;
+  const slice = data.slice(-BARS);
+  return (
+    <View style={{ marginBottom: 14 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
+        <Text style={{ fontSize: 12, color: '#888', fontWeight: '600' }}>{label}</Text>
+        <Text style={{ fontSize: 12, color, fontWeight: '700' }}>{format(last)}</Text>
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'flex-end', height: 28, gap: 2 }}>
+        {slice.map((v, i) => (
+          <View
+            key={i}
+            style={{
+              flex: 1, borderRadius: 2,
+              height: Math.max(2, Math.round((v / (max || 1)) * 28)),
+              backgroundColor: i === slice.length - 1 ? color : color + '60',
+            }}
+          />
+        ))}
+      </View>
+    </View>
+  );
+};
+
 const Section = ({
   title, children, colors,
 }: { title: string; children: React.ReactNode; colors: ReturnType<typeof useTheme> }) => (
