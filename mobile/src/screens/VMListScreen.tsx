@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, FlatList, StyleSheet,
-  TouchableOpacity, RefreshControl, ActivityIndicator, Alert,
+  TouchableOpacity, RefreshControl, ActivityIndicator, Alert, SafeAreaView,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { vmsApi, VMItem, VMAction } from '../api/vms';
 import { VMCard } from '../components/VMCard';
 import { REFRESH_INTERVAL_MS } from '../utils/constants';
@@ -51,14 +52,41 @@ export const VMListScreen = ({ route, navigation }: any) => {
     }
   };
 
-  const handleVMPress = (vm: VMItem) => {
-    navigation.navigate('VMDetailsScreen', { serverId, vm });
-  };
-
   const displayData = activeTab === 'vms' ? vms : containers;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* ── Custom header (no React Navigation header = no iOS bubble) ── */}
+      <SafeAreaView>
+        <View style={[styles.customHeader, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
+          {/* Back button */}
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            activeOpacity={0.5}
+            style={styles.headerBtn}
+          >
+            <Ionicons name="chevron-back" size={26} color={colors.accent} />
+          </TouchableOpacity>
+
+          {/* Title */}
+          <Text style={[styles.headerTitle, { color: colors.text }]} numberOfLines={1}>
+            {serverName}
+          </Text>
+
+          {/* Settings button — plain JSX, zero iOS wrapper */}
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ServerSettingsScreen', { serverId, serverName })}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            activeOpacity={0.5}
+            style={styles.headerBtn}
+          >
+            <Ionicons name="settings-outline" size={22} color={colors.accent} />
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+
+      {/* ── Tab bar ── */}
       <View style={[styles.tabBar, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         {(['vms', 'containers'] as const).map((tab) => (
           <TouchableOpacity
@@ -78,6 +106,7 @@ export const VMListScreen = ({ route, navigation }: any) => {
         ))}
       </View>
 
+      {/* ── Content ── */}
       {loading && displayData.length === 0 ? (
         <View style={styles.center}>
           <ActivityIndicator size="large" color={colors.accent} />
@@ -97,7 +126,7 @@ export const VMListScreen = ({ route, navigation }: any) => {
               vm={item}
               actionLoading={actionLoading}
               onAction={handleAction}
-              onPress={() => handleVMPress(item)}
+              onPress={() => navigation.navigate('VMDetailsScreen', { serverId, vm: item })}
             />
           )}
           contentContainerStyle={styles.list}
@@ -112,16 +141,33 @@ export const VMListScreen = ({ route, navigation }: any) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  tabBar: {
+
+  /* Custom header */
+  customHeader: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
+  headerBtn: { padding: 6 },
+  headerTitle: {
+    flex: 1,
+    fontSize: 17,
+    fontWeight: '600',
+    textAlign: 'center',
+    letterSpacing: 0.1,
+  },
+
+  /* Tab bar */
+  tabBar: { flexDirection: 'row', borderBottomWidth: 1 },
   tab: {
     flex: 1, paddingVertical: 14, alignItems: 'center',
     borderBottomWidth: 2, borderBottomColor: 'transparent',
   },
   activeTab: { borderBottomWidth: 2 },
   tabText: { fontSize: 15, fontWeight: '500' },
+
   list: { padding: 16 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   emptyText: { fontSize: 16 },

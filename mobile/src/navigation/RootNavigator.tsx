@@ -73,23 +73,7 @@ const DashboardStack = ({ navigation }: any) => {
       <Stack.Screen
         name="VMListScreen"
         component={VMListScreen}
-        options={({ navigation, route }: any) => ({
-          title: (route.params?.serverName as string) || t('vms_tab'),
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ServerSettingsScreen', {
-                  serverId: route.params?.serverId,
-                  serverName: route.params?.serverName,
-                })
-              }
-              activeOpacity={0.5}
-              hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
-            >
-              <Ionicons name="settings-outline" size={22} color="#0A84FF" />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="VMDetailsScreen"
