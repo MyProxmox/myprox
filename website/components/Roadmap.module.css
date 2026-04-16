@@ -47,9 +47,9 @@
 }
 
 .itemIcon {
-  font-size: 18px;
-  width: 24px;
-  text-align: center;
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
 

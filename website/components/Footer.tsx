@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { GitBranch } from 'lucide-react';
 import styles from './Footer.module.css';
 
 export default function Footer() {
@@ -26,7 +27,10 @@ export default function Footer() {
           <div className={styles.group}>
             <div className={styles.groupTitle}>Développeurs</div>
             <Link href="/docs">Documentation</Link>
-            <a href="https://github.com/MyProxmox" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/MyProxmox" target="_blank" rel="noopener noreferrer" className={styles.extLink}>
+              GitHub
+              <GitBranch size={12} />
+            </a>
             <Link href="/docs#agent">Déployer l&apos;agent</Link>
           </div>
           <div className={styles.group}>

@@ -1,8 +1,12 @@
+import {
+  Home, Cloud, Monitor, Zap, HardDrive,
+  ShieldCheck, Bell, RefreshCw, CheckCircle2
+} from 'lucide-react';
 import styles from './Features.module.css';
 
 const features = [
   {
-    icon: '⌂',
+    Icon: Home,
     iconBg: 'rgba(16,185,129,0.12)',
     iconColor: '#10B981',
     title: 'Mode Local',
@@ -12,7 +16,7 @@ const features = [
     tags: ['LAN', 'Zéro latence', 'Sans compte'],
   },
   {
-    icon: '☁',
+    Icon: Cloud,
     iconBg: 'rgba(99,102,241,0.12)',
     iconColor: '#818CF8',
     title: 'Cloud Relay',
@@ -22,7 +26,7 @@ const features = [
     tags: ['AES-256', 'WebSocket', 'Partout'],
   },
   {
-    icon: '🖥',
+    Icon: Monitor,
     iconBg: 'rgba(6,182,212,0.12)',
     iconColor: '#06B6D4',
     title: 'Console VNC',
@@ -32,7 +36,7 @@ const features = [
     tags: ['NoVNC', 'WebView', 'Natif'],
   },
   {
-    icon: '⚡',
+    Icon: Zap,
     iconBg: 'rgba(124,58,237,0.12)',
     iconColor: '#A78BFA',
     title: 'Contrôle total',
@@ -42,7 +46,7 @@ const features = [
     tags: ['VM', 'LXC', 'Monitoring'],
   },
   {
-    icon: '💾',
+    Icon: HardDrive,
     iconBg: 'rgba(245,158,11,0.12)',
     iconColor: '#F59E0B',
     title: 'Proxmox Backup Server',
@@ -52,7 +56,7 @@ const features = [
     tags: ['PBS', 'Datastores', 'Logs'],
   },
   {
-    icon: '🔒',
+    Icon: ShieldCheck,
     iconBg: 'rgba(239,68,68,0.1)',
     iconColor: '#F87171',
     title: 'Sécurité maximale',
@@ -62,7 +66,7 @@ const features = [
     tags: ['JWT', 'Keychain', 'Zero trust'],
   },
   {
-    icon: '🔔',
+    Icon: Bell,
     iconBg: 'rgba(6,182,212,0.1)',
     iconColor: '#67E8F9',
     title: 'Notifications Push',
@@ -72,7 +76,7 @@ const features = [
     tags: ['APNs', 'Firebase', 'Alert'],
   },
   {
-    icon: '☁',
+    Icon: RefreshCw,
     iconBg: 'rgba(99,102,241,0.08)',
     iconColor: '#6366F1',
     title: 'Sync iCloud',
@@ -103,7 +107,7 @@ export default function Features() {
             <div key={f.title} className={`glass ${styles.card}`}>
               <div className={styles.cardTop}>
                 <div className={styles.iconBox} style={{ background: f.iconBg }}>
-                  <span style={{ fontSize: 26, color: f.iconColor }}>{f.icon}</span>
+                  <f.Icon size={22} color={f.iconColor} strokeWidth={1.75} />
                 </div>
                 <span
                   className={styles.featureBadge}

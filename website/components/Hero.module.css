@@ -146,6 +146,13 @@
 .floatTitle { font-size: 12px; font-weight: 700; color: var(--text); }
 .floatSub   { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
 
+.floatIconBox {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
 .floatCard1 {
   bottom: -20px; left: -30px;
   animation: float 4s 0.5s ease-in-out infinite;

@@ -22,13 +22,12 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className={styles.actions}>
-          {/* Status indicator */}
           <div className={styles.status}>
             <span className="status-dot" style={{ background: '#10B981' }} />
             <span>Production</span>
           </div>
           <Link href="#download" className="btn btn-primary btn-sm">
-            🚀 Accès Bêta
+            Accès Bêta
           </Link>
         </div>
       </div>

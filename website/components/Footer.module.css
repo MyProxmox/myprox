@@ -77,6 +77,12 @@
   color: var(--text);
 }
 
+.extLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .bottom {
   display: flex;
   align-items: center;

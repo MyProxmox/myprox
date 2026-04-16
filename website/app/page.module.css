@@ -33,6 +33,12 @@
   margin-top: 8px;
 }
 
+.storeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .betaNote {
   font-size: 13px !important;
   color: var(--text-dim) !important;

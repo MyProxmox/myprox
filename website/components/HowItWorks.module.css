@@ -20,7 +20,13 @@
   margin-left: 8px;
 }
 .card { padding: 24px; }
-.cardIcon { font-size: 28px; margin-bottom: 12px; }
+.cardIcon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
 .cardTitle { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
 .cardDesc { font-size: 13px; color: rgba(248,248,255,0.6); line-height: 1.6; }
 

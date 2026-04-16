@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Monitor, Cloud, Activity, HardDrive, Server } from 'lucide-react';
 import styles from './Hero.module.css';
 
 const stats = [
@@ -36,7 +37,7 @@ export default function Hero() {
 
           <div className={`animate-fade-up-3 ${styles.ctas}`}>
             <a href="#download" className="btn btn-primary">
-              📱 Télécharger la Bêta
+              Télécharger la Bêta
             </a>
             <Link href="/docs" className="btn btn-outline">
               Voir la doc →
@@ -103,7 +104,7 @@ export default function Hero() {
 
               {/* VNC Console Badge */}
               <div className={styles.vncBadge}>
-                <span>🖥</span>
+                <Monitor size={16} color="#6366F1" strokeWidth={2} />
                 <div>
                   <div className={styles.vncTitle}>Console VNC</div>
                   <div className={styles.vncSub}>Accès direct — k3s-master</div>
@@ -115,7 +116,9 @@ export default function Hero() {
 
           {/* Floating decorations */}
           <div className={`glass ${styles.floatCard} ${styles.floatCard1}`}>
-            <span style={{ fontSize: 18 }}>💾</span>
+            <div className={styles.floatIconBox} style={{ background: 'rgba(245,158,11,0.15)' }}>
+              <HardDrive size={16} color="#F59E0B" strokeWidth={1.75} />
+            </div>
             <div>
               <div className={styles.floatTitle}>PBS Backup</div>
               <div className={styles.floatSub}>Hier · Succès</div>
@@ -123,7 +126,9 @@ export default function Hero() {
           </div>
 
           <div className={`glass ${styles.floatCard} ${styles.floatCard2}`}>
-            <span style={{ fontSize: 18 }}>☁</span>
+            <div className={styles.floatIconBox} style={{ background: 'rgba(99,102,241,0.15)' }}>
+              <Cloud size={16} color="#818CF8" strokeWidth={1.75} />
+            </div>
             <div>
               <div className={styles.floatTitle}>Cloud Relay</div>
               <div className={styles.floatSub}>Paris — 12ms</div>

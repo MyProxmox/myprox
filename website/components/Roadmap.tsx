@@ -1,22 +1,26 @@
+import {
+  Smartphone, Server, Cloud, Zap,
+  HardDrive, Settings, Activity, Bell, CloudCog, Check
+} from 'lucide-react';
 import styles from './Roadmap.module.css';
 
 const released = [
-  { icon: '📱', label: 'Application iOS & Android native' },
-  { icon: '⌂', label: 'Mode Local (connexion directe LAN)' },
-  { icon: '☁', label: 'Cloud Relay (tunnel WebSocket chiffré)' },
-  { icon: '⚡', label: 'Contrôle VMs & LXC (Start/Stop/Restart)' },
-  { icon: '📊', label: 'Monitoring CPU & RAM en temps réel' },
-  { icon: '🖥', label: 'Console VNC mobile (autolandscape)' },
-  { icon: '🔄', label: 'CI/CD automatisé · Production live' },
+  { Icon: Smartphone, color: '#6366F1', label: 'Application iOS & Android native' },
+  { Icon: Server,     color: '#818CF8', label: 'Mode Local (connexion directe LAN)' },
+  { Icon: Cloud,      color: '#06B6D4', label: 'Cloud Relay (tunnel WebSocket chiffré)' },
+  { Icon: Zap,        color: '#10B981', label: 'Contrôle VMs & LXC (Start/Stop/Restart)' },
+  { Icon: Activity,   color: '#F59E0B', label: 'Monitoring CPU & RAM en temps réel' },
+  { Icon: Server,     color: '#67E8F9', label: 'Console VNC mobile (autolandscape)' },
+  { Icon: CloudCog,   color: '#A78BFA', label: 'CI/CD automatisé — Production live' },
 ];
 
 const upcoming = [
-  { icon: '💾', label: 'Support Proxmox Backup Server (PBS)', badge: 'Phase 7' },
-  { icon: '⚙️', label: 'Paramètres & mises à jour APT des noeuds', badge: 'Phase 7' },
-  { icon: '🩺', label: 'Diagnostics systèmes (santé disques, VMs)', badge: 'Phase 7' },
-  { icon: '🔔', label: 'Notifications Push (alertes temps réel)', badge: 'Phase 7' },
-  { icon: '☁', label: 'Synchronisation iCloud (Premium)', badge: 'Phase 7' },
-  { icon: '🍎', label: 'Publication App Store & Play Store', badge: 'Phase 8' },
+  { Icon: HardDrive, color: '#06B6D4', label: 'Support Proxmox Backup Server (PBS)', badge: 'Phase 7' },
+  { Icon: Settings,  color: '#6366F1', label: 'Paramètres & mises à jour APT des nœuds', badge: 'Phase 7' },
+  { Icon: Activity,  color: '#10B981', label: 'Diagnostics systèmes (santé disques, VMs)', badge: 'Phase 7' },
+  { Icon: Bell,      color: '#F59E0B', label: 'Notifications Push (alertes temps réel)', badge: 'Phase 7' },
+  { Icon: Cloud,     color: '#818CF8', label: 'Synchronisation iCloud (Premium)', badge: 'Phase 7' },
+  { Icon: Smartphone,color: '#A78BFA', label: 'Publication App Store & Play Store', badge: 'Phase 8' },
 ];
 
 export default function Roadmap() {
@@ -39,9 +43,13 @@ export default function Roadmap() {
             <ul className={styles.list}>
               {released.map((r) => (
                 <li key={r.label} className={styles.item}>
-                  <span className={styles.itemIcon}>{r.icon}</span>
+                  <div className={styles.itemIcon} style={{ background: `${r.color}18` }}>
+                    <r.Icon size={14} color={r.color} strokeWidth={2} />
+                  </div>
                   <span className={styles.itemLabel}>{r.label}</span>
-                  <span className={styles.checkMark}>✓</span>
+                  <div className={styles.checkMark}>
+                    <Check size={11} color="#10B981" strokeWidth={2.5} />
+                  </div>
                 </li>
               ))}
             </ul>
@@ -56,7 +64,9 @@ export default function Roadmap() {
             <ul className={styles.list}>
               {upcoming.map((u) => (
                 <li key={u.label} className={styles.item}>
-                  <span className={styles.itemIcon}>{u.icon}</span>
+                  <div className={styles.itemIcon} style={{ background: `${u.color}18` }}>
+                    <u.Icon size={14} color={u.color} strokeWidth={2} />
+                  </div>
                   <span className={styles.itemLabel}>{u.label}</span>
                   <span
                     className={styles.badge}

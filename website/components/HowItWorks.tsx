@@ -1,29 +1,34 @@
+import { Smartphone, Server, Cloud, Zap } from 'lucide-react';
 import styles from './HowItWorks.module.css';
 
 const steps = [
   {
     num: '01',
+    Icon: Smartphone,
+    iconColor: '#6366F1',
     title: 'Téléchargez MyProx',
     desc: 'Installez l\'application depuis TestFlight (iOS) ou le Play Store (Android). Créez votre compte en 30 secondes.',
-    icon: '📲',
   },
   {
     num: '02',
+    Icon: Server,
+    iconColor: '#818CF8',
     title: 'Ajoutez votre serveur',
     desc: 'Entrez l\'IP de votre Proxmox, vos identifiants et choisissez le mode : Local (réseau LAN) ou Cloud (accès distant).',
-    icon: '🖥',
   },
   {
     num: '03',
+    Icon: Cloud,
+    iconColor: '#06B6D4',
     title: 'Mode Cloud ? Déployez l\'agent',
     desc: 'Lancez notre agent Go sur votre réseau local (Docker en une commande). Il établit le tunnel sécurisé automatiquement.',
-    icon: '☁',
   },
   {
     num: '04',
+    Icon: Zap,
+    iconColor: '#10B981',
     title: 'Gérez depuis partout',
-    desc: 'Start, Stop, Restart. Monitoring CPU et RAM. Suppression de VMs. Tout depuis votre téléphone où que vous soyez.',
-    icon: '⚡',
+    desc: 'Start, Stop, Restart. Monitoring CPU et RAM. Console VNC. Tout depuis votre téléphone où que vous soyez.',
   },
 ];
 
@@ -47,7 +52,9 @@ export default function HowItWorks() {
                 {i < steps.length - 1 && <div className={styles.connector} />}
               </div>
               <div className={`glass ${styles.card}`}>
-                <div className={styles.cardIcon}>{s.icon}</div>
+                <div className={styles.cardIcon} style={{ background: `${s.iconColor}18` }}>
+                  <s.Icon size={22} color={s.iconColor} strokeWidth={1.75} />
+                </div>
                 <h3 className={styles.cardTitle}>{s.title}</h3>
                 <p className={styles.cardDesc}>{s.desc}</p>
               </div>
@@ -58,9 +65,9 @@ export default function HowItWorks() {
         {/* Code snippet */}
         <div className={`glass ${styles.snippet}`}>
           <div className={styles.snippetHeader}>
-            <div className={styles.dot} style={{ background: '#f44336' }} />
-            <div className={styles.dot} style={{ background: '#FF9800' }} />
-            <div className={styles.dot} style={{ background: '#4CAF50' }} />
+            <div className={styles.dot} style={{ background: '#ef4444' }} />
+            <div className={styles.dot} style={{ background: '#f59e0b' }} />
+            <div className={styles.dot} style={{ background: '#10b981' }} />
             <span className={styles.snippetTitle}>Déploiement agent — 1 commande</span>
           </div>
           <pre className={styles.code}>{`docker run -d \\
