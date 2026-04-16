@@ -130,10 +130,10 @@ jobs:
             # Note: Assuming docker compose v2 is available. If using old v1, might need docker-compose.
             if command -v docker-compose &> /dev/null; then
               docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull
-              docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+              docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
             else
               docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
-              docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+              docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
             fi
             
             echo "Deploy complete: $(date)"
