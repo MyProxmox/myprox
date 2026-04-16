@@ -73,7 +73,7 @@ const DashboardStack = ({ navigation }: any) => {
       <Stack.Screen
         name="VMListScreen"
         component={VMListScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, headerBackTitle: '' }}
       />
       <Stack.Screen
         name="VMDetailsScreen"
