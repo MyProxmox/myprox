@@ -4,8 +4,9 @@
 /* Sidebar */
 .sidebar { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 6px; }
 .sidebarTitle { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(248,248,255,0.3); font-weight: 700; margin-bottom: 8px; }
-.sidebarLink { font-size: 13px; color: rgba(248,248,255,0.55); text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: all 0.2s; }
+.sidebarLink { font-size: 13px; color: rgba(248,248,255,0.55); text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
 .sidebarLink:hover { background: rgba(124,58,237,0.12); color: #fff; }
+.sidebarIcon { display: inline-flex; align-items: center; justify-content: center; width: 20px; flex-shrink: 0; }
 .sidebarDivider { height: 1px; background: rgba(255,255,255,0.06); margin: 12px 0; }
 
 /* Content */
@@ -15,7 +16,8 @@
 
 .content { display: flex; flex-direction: column; gap: 20px; }
 .section { padding: 32px; }
-.sectionTitle { font-size: 20px; font-weight: 700; margin-bottom: 18px; }
+.sectionTitle { font-size: 20px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+.sectionIcon { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .sectionContent { display: flex; flex-direction: column; gap: 14px; font-size: 15px; color: rgba(248,248,255,0.7); line-height: 1.7; }
 .sectionContent ol, .sectionContent ul { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
 .sectionContent strong { color: rgba(248,248,255,0.9); }

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Rocket, Home, Cloud, ShieldCheck, Radio, CreditCard, GitBranch } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import styles from './docs.module.css';
@@ -12,25 +13,29 @@ export const metadata: Metadata = {
 const sections = [
   {
     id: 'quickstart',
-    title: '🚀 Démarrage rapide',
+    Icon: Rocket,
+    iconColor: '#6366F1',
+    title: 'Démarrage rapide',
     content: (
       <>
-        <p>MyProx s'installe en 3 étapes :</p>
+        <p>MyProx s&apos;installe en 3 étapes :</p>
         <ol>
-          <li>Téléchargez l'app via TestFlight (iOS) ou le Play Store (Android)</li>
+          <li>Téléchargez l&apos;app via TestFlight (iOS) ou le Play Store (Android)</li>
           <li>Créez un compte (email + mot de passe)</li>
           <li>Ajoutez votre serveur Proxmox</li>
         </ol>
-        <p>Aucune configuration serveur supplémentaire n'est nécessaire pour le mode local.</p>
+        <p>Aucune configuration serveur supplémentaire n&apos;est nécessaire pour le mode local.</p>
       </>
     ),
   },
   {
     id: 'local-mode',
-    title: '⌂ Mode Local',
+    Icon: Home,
+    iconColor: '#10B981',
+    title: 'Mode Local',
     content: (
       <>
-        <p>Le mode local connecte directement l'app à votre Proxmox sur le même réseau Wi-Fi.</p>
+        <p>Le mode local connecte directement l&apos;app à votre Proxmox sur le même réseau Wi-Fi.</p>
         <div className={styles.codeBlock}>
           <code>IP : 192.168.x.x ou 10.x.x.x</code><br />
           <code>Port : 8006 (défaut Proxmox)</code><br />
@@ -42,13 +47,15 @@ const sections = [
   },
   {
     id: 'cloud-mode',
-    title: '☁ Mode Cloud',
+    Icon: Cloud,
+    iconColor: '#818CF8',
+    title: 'Mode Cloud',
     content: (
       <>
-        <p>Le mode cloud vous permet d'accéder à votre Proxmox depuis n'importe où, via un agent Go déployé localement.</p>
+        <p>Le mode cloud vous permet d&apos;accéder à votre Proxmox depuis n&apos;importe où, via un agent Go déployé localement.</p>
         <p><strong>Architecture :</strong></p>
         <div className={styles.codeBlock}>
-          <code>📱 App → 🌐 API → ☁ Relay → 🤖 Agent → 🧱 Proxmox</code>
+          <code>App Mobile → API MyProx → Cloud Relay → Agent → Proxmox</code>
         </div>
         <p><strong>Déploiement agent (1 commande) :</strong></p>
         <div className={styles.codeBlock}>
@@ -60,13 +67,15 @@ const sections = [
   -e PROXMOX_PASS=<pass> \\
   myprox/agent:latest`}</code>
         </div>
-        <p>Le token agent est fourni automatiquement lors de l'ajout d'un serveur en mode Cloud dans l'app.</p>
+        <p>Le token agent est fourni automatiquement lors de l&apos;ajout d&apos;un serveur en mode Cloud dans l&apos;app.</p>
       </>
     ),
   },
   {
     id: 'security',
-    title: '🔒 Sécurité',
+    Icon: ShieldCheck,
+    iconColor: '#F87171',
+    title: 'Sécurité',
     content: (
       <>
         <ul>
@@ -81,10 +90,12 @@ const sections = [
   },
   {
     id: 'api',
-    title: '📡 API Reference',
+    Icon: Radio,
+    iconColor: '#06B6D4',
+    title: 'API Reference',
     content: (
       <>
-        <p>L'API REST tourne sur <code>localhost:3000</code> (local) ou <code>api.myprox.app</code> (cloud).</p>
+        <p>L&apos;API REST tourne sur <code>localhost:3000</code> (local) ou <code>api.myprox.app</code> (cloud).</p>
         <div className={styles.table}>
           <table>
             <thead>
@@ -132,11 +143,26 @@ export default function DocsPage() {
             <aside className={styles.sidebar}>
               <p className={styles.sidebarTitle}>Sur cette page</p>
               {sections.map((s) => (
-                <a key={s.id} href={`#${s.id}`} className={styles.sidebarLink}>{s.title}</a>
+                <a key={s.id} href={`#${s.id}`} className={styles.sidebarLink}>
+                  <span className={styles.sidebarIcon} style={{ color: s.iconColor }}>
+                    <s.Icon size={13} strokeWidth={2} />
+                  </span>
+                  {s.title}
+                </a>
               ))}
               <div className={styles.sidebarDivider} />
-              <Link href="/pricing" className={styles.sidebarLink}>💸 Voir les tarifs</Link>
-              <a href="https://github.com" target="_blank" rel="noopener" className={styles.sidebarLink}>⭐ GitHub</a>
+              <Link href="/pricing" className={styles.sidebarLink}>
+                <span className={styles.sidebarIcon} style={{ color: '#F59E0B' }}>
+                  <CreditCard size={13} strokeWidth={2} />
+                </span>
+                Voir les tarifs
+              </Link>
+              <a href="https://github.com/MyProxmox" target="_blank" rel="noopener" className={styles.sidebarLink}>
+                <span className={styles.sidebarIcon} style={{ color: '#818CF8' }}>
+                  <GitBranch size={13} strokeWidth={2} />
+                </span>
+                GitHub
+              </a>
             </aside>
 
             {/* Content */}
@@ -148,7 +174,12 @@ export default function DocsPage() {
               </div>
               {sections.map((s) => (
                 <section key={s.id} id={s.id} className={`glass ${styles.section}`}>
-                  <h2 className={styles.sectionTitle}>{s.title}</h2>
+                  <h2 className={styles.sectionTitle}>
+                    <span className={styles.sectionIcon} style={{ background: `${s.iconColor}18` }}>
+                      <s.Icon size={16} color={s.iconColor} strokeWidth={1.75} />
+                    </span>
+                    {s.title}
+                  </h2>
                   <div className={styles.sectionContent}>{s.content}</div>
                 </section>
               ))}
