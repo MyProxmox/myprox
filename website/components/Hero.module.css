@@ -163,8 +163,17 @@
 }
 
 @media (max-width: 900px) {
-  .inner { grid-template-columns: 1fr; gap: 60px; }
+  .inner { grid-template-columns: 1fr; gap: 48px; }
   .visual { order: -1; }
   .floatCard1 { left: 0; }
   .floatCard2 { right: 0; }
+}
+
+@media (max-width: 580px) {
+  .hero { padding-top: 48px; padding-bottom: 72px; }
+  .phone { width: 220px; }
+  .floatCard { display: none; }
+  .stats { flex-wrap: wrap; gap: 20px; }
+  .ctas { flex-direction: column; }
+  .ctas .btn { width: 100%; justify-content: center; }
 }

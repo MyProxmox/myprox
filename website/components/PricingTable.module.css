@@ -110,4 +110,6 @@
 
 @media (max-width: 680px) {
   .grid { grid-template-columns: 1fr; }
+  .card { padding: 24px 20px; }
+  .price { font-size: 36px; }
 }

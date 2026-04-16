@@ -107,3 +107,11 @@
   .links { justify-content: flex-start; flex-wrap: wrap; gap: 32px; }
   .bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
+
+@media (max-width: 768px) {
+  .footer { padding-top: 48px; }
+  .inner { padding-bottom: 32px; }
+  .group a { min-height: 44px; display: flex; align-items: center; padding: 4px 0; }
+  .links { gap: 24px; }
+  .bottom { font-size: 12px; }
+}

@@ -2,8 +2,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: 0 0;
-  background: rgba(8, 11, 20, 0.75);
+  background: rgba(8, 11, 20, 0.85);
   border-bottom: 1px solid rgba(255,255,255,0.06);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -16,6 +15,7 @@
   height: 68px;
 }
 
+/* ── Logo ── */
 .logo {
   display: flex;
   align-items: center;
@@ -45,6 +45,7 @@
   letter-spacing: -0.03em;
 }
 
+/* ── Desktop Nav ── */
 .links {
   display: flex;
   align-items: center;
@@ -60,17 +61,16 @@
   transition: color 0.2s;
 }
 
-.links a:hover {
-  color: var(--text);
-}
+.links a:hover { color: var(--text); }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   flex-shrink: 0;
 }
 
+/* ── Language Switcher ── */
 .langSwitch {
   display: flex;
   align-items: center;
@@ -93,6 +93,7 @@
   padding: 4px 10px;
   border-radius: 50px;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .langBtn:hover {
@@ -113,22 +114,117 @@
   border-radius: 50px;
   background: var(--grad-primary);
   pointer-events: none;
+  white-space: nowrap;
 }
 
 .langSep {
   width: 1px;
   height: 14px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.12);
   flex-shrink: 0;
 }
 
-.flag {
+.flag { font-size: 14px; line-height: 1; }
+
+/* ── Hamburger ── */
+.hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.2s;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.hamburger:hover { background: rgba(255,255,255,0.08); }
+
+/* ── Mobile Menu ── */
+.mobileMenu {
+  display: none;
+  position: fixed;
+  top: 68px;
+  left: 0;
+  right: 0;
+  background: rgba(8, 11, 20, 0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 24px 20px 32px;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 99;
+  transform: translateY(-8px);
+  opacity: 0;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+  pointer-events: none;
+}
+
+.mobileMenuOpen {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+}
+
+.mobileLink {
+  display: flex;
+  align-items: center;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 14px 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: color 0.2s;
+  min-height: 52px;
+}
+
+.mobileLink:last-child { border-bottom: none; }
+.mobileLink:hover  { color: var(--text); }
+
+.mobileLang {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.mobileLang .langBtn,
+.mobileLang .langActive {
+  flex: 1;
+  justify-content: center;
+  padding: 10px;
   font-size: 14px;
-  line-height: 1;
 }
 
+/* ── Overlay ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 98;
+  top: 68px;
+}
+
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .links { display: none; }
-  .langSwitch { display: none; }
+  .hamburger     { display: flex; }
+  .mobileMenu    { display: flex; }
+  .overlay       { display: block; }
+  .links         { display: none; }
+  .langSwitch    { display: none; }
+  .desktopCta    { display: none; }
 }
-

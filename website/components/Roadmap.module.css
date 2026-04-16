@@ -85,4 +85,7 @@
 
 @media (max-width: 768px) {
   .grid { grid-template-columns: 1fr; }
+  .column { padding: 24px 20px; }
+  .item { min-height: 44px; }
+  .itemLabel { font-size: 13px; }
 }
