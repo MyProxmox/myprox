@@ -25,13 +25,15 @@ export const VMListScreen = ({ route, navigation }: any) => {
       headerRight: () => (
         <TouchableOpacity
           onPress={() => navigation.navigate('ServerSettingsScreen', { serverId, serverName })}
-          style={{ marginRight: 4 }}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          activeOpacity={0.5}
+          style={{ paddingRight: 4 }}
         >
           <Ionicons name="settings-outline" size={22} color={colors.accent} />
         </TouchableOpacity>
       ),
     });
-  }, [serverName, serverId]);
+  }, [serverName, serverId, colors.accent]);
 
   const fetchVMs = useCallback(async () => {
     try {
