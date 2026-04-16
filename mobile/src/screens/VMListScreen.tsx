@@ -79,7 +79,7 @@ export const VMListScreen = ({ route, navigation }: any) => {
             onPress={() => navigation.navigate('ServerSettingsScreen', { serverId, serverName })}
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             activeOpacity={0.5}
-            style={styles.headerBtn}
+            style={[styles.headerBtn, { paddingRight: 12 }]}
           >
             <Ionicons name="settings-outline" size={22} color={colors.accent} />
           </TouchableOpacity>
