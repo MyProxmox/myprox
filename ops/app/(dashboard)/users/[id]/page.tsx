@@ -14,7 +14,7 @@ interface UserDetail {
   created_at: string; last_login_at: string | null
   stripe_customer_id: string | null; stripe_subscription_id: string | null; stripe_period_end: string | null
   suspended_until: string | null; ban_reason: string | null
-  servers: { id: string; name: string; host: string; created_at: string }[]
+  servers: { id: string; name: string; local_ip: string; mode: string; verified: boolean; created_at: string }[]
   recentEvents: { event_type: string; meta: object; created_at: string; actor_email: string | null }[]
 }
 
@@ -208,8 +208,8 @@ export default function UserDetailPage() {
             <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
               <Server size={14} style={{ color: 'var(--accent)', flexShrink: 0 }} />
               <div>
-                <div style={{ fontSize: 13, color: 'var(--text)' }}>{s.name || s.host}</div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{s.host}</div>
+                <div style={{ fontSize: 13, color: 'var(--text)' }}>{s.name}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{s.local_ip} · {s.mode}</div>
               </div>
               <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--text-muted)' }}>
                 {fmt(s.created_at)?.slice(0, 11)}

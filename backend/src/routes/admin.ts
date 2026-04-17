@@ -219,12 +219,13 @@ router.get('/users/:id', async (req: Request, res: Response) => {
     const [user, servers, events] = await Promise.all([
       db.query(
         `SELECT id, email, plan, role, status, created_at, last_login_at,
+                stripe_customer_id, stripe_subscription_id, stripe_period_end,
                 suspended_until, ban_reason
          FROM users WHERE id = $1`,
         [id]
       ),
       db.query(
-        'SELECT id, name, host, created_at FROM proxmox_servers WHERE user_id = $1 ORDER BY created_at DESC',
+        'SELECT id, name, local_ip, mode, verified, created_at FROM proxmox_servers WHERE user_id = $1 ORDER BY created_at DESC',
         [id]
       ),
       db.query(
