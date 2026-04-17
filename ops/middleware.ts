@@ -11,10 +11,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Allow Next.js internals and static files
+  // Allow Next.js internals, static files, and API proxy
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
+    pathname.startsWith('/proxy') ||
     pathname.includes('.')
   ) {
     return NextResponse.next()
