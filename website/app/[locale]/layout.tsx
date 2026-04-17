@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   title: 'MyProx — Gérez votre Proxmox depuis votre téléphone',
   description: "MyProx est l'application mobile qui vous permet de gérer vos serveurs Proxmox où que vous soyez.",
   keywords: 'proxmox, mobile, gestion serveur, virtualisation, iOS, Android, cloud',
+  icons: {
+    icon: 'https://cdn.myprox.app/img/logos/myprox-logo-notext-purple-nobg.png',
+    apple: 'https://cdn.myprox.app/img/logos/myprox-logo-notext-purple-nobg.png',
+  },
   openGraph: {
     title: 'MyProx — Proxmox dans votre poche',
     description: 'Gérez vos VMs et containers Proxmox depuis votre iPhone ou Android.',
