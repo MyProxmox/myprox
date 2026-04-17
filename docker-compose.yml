@@ -80,7 +80,7 @@ services:
     ports:
       - "3002:3002"
     environment:
-      NEXT_PUBLIC_API_URL: ${API_URL:-http://api:3000}
+      BACKEND_URL: http://api:3000
     depends_on:
       - api
     restart: unless-stopped

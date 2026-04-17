@@ -24,7 +24,8 @@ function LoginForm() {
     try {
       await login(email, password)
       const from = searchParams.get('from') || '/'
-      router.push(from)
+      // Full navigation — ensures the ops_token cookie is sent to the middleware
+      window.location.href = from
     } catch (err: unknown) {
       if (
         err &&
