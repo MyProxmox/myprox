@@ -6,10 +6,11 @@ import { useState } from 'react'
 
 interface HeaderProps {
   title: string
+  subtitle?: string
   onRefresh?: () => void | Promise<void>
 }
 
-export default function Header({ title, onRefresh }: HeaderProps) {
+export default function Header({ title, subtitle, onRefresh }: HeaderProps) {
   const apiOnline = useOpsStore((s) => s.apiOnline)
   const [refreshing, setRefreshing] = useState(false)
 
@@ -39,16 +40,12 @@ export default function Header({ title, onRefresh }: HeaderProps) {
       }}
     >
       {/* Page title */}
-      <h1
-        style={{
-          fontSize: 18,
-          fontWeight: 600,
-          color: 'var(--text)',
-          letterSpacing: '-0.01em',
-        }}
-      >
-        {title}
-      </h1>
+      <div>
+        <h1 style={{ fontSize: 18, fontWeight: 600, color: 'var(--text)', letterSpacing: '-0.01em' }}>
+          {title}
+        </h1>
+        {subtitle && <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 1 }}>{subtitle}</p>}
+      </div>
 
       {/* Right actions */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>

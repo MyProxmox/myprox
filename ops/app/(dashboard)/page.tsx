@@ -4,6 +4,7 @@ import { useEffect, useCallback } from 'react'
 import { Server, Monitor, MemoryStick, Activity, Info, AlertTriangle, XCircle, ExternalLink } from 'lucide-react'
 import Header from '@/components/Header'
 import StatCard from '@/components/StatCard'
+import LiveMetricsBanner from '@/components/LiveMetricsBanner'
 import { useOpsStore, NodeStatus, Server as ServerItem } from '@/lib/store'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -387,9 +388,12 @@ export default function DashboardPage() {
       ? `${formatBytes(totalMemUsed)} / ${formatBytes(totalMemTotal)}`
       : '—'
 
+  const firstOnlineServer = servers.find((s: ServerItem) => nodeStatuses[s.id])
+
   return (
     <>
       <Header title="Tableau de bord" onRefresh={loadAll} />
+      {firstOnlineServer && <LiveMetricsBanner serverId={firstOnlineServer.id} />}
 
       <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: 28 }}>
         {/* ── Stat cards ── */}

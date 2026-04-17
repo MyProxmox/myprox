@@ -7,8 +7,9 @@ import {
   LayoutDashboard,
   Monitor,
   Server,
-  Archive,
+  Database,
   Settings,
+  Users,
   LogOut,
 } from 'lucide-react'
 import { logout, getUser } from '@/lib/auth'
@@ -33,10 +34,10 @@ const NAV_ITEMS = [
     disabled: false,
   },
   {
-    label: 'Backups',
+    label: 'Sauvegardes PBS',
     href: '/backups',
-    icon: Archive,
-    disabled: true,
+    icon: Database,
+    disabled: false,
   },
 ]
 

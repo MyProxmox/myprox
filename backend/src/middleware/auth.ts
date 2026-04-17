@@ -11,7 +11,7 @@ declare global {
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
+    const token = req.headers.authorization?.split(' ')[1] || (req.query?.token as string | undefined);
 
     if (!token) {
       return res.status(401).json({ error: 'Missing token' });

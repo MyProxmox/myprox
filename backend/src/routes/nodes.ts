@@ -109,4 +109,51 @@ router.get('/:serverId/node/logs', authMiddleware, async (req, res) => {
   }
 });
 
+// GET /api/v1/servers/:serverId/node/stream
+// SSE endpoint: pushes node metrics every 5s (cpu, mem, netin, netout, timestamp)
+router.get('/:serverId/node/stream', authMiddleware, async (req, res) => {
+  const { serverId } = req.params;
+
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders();
+
+  let proxmox: any;
+  try {
+    proxmox = await getProxmoxForServer(serverId, req.userId!);
+  } catch {
+    res.write(`data: ${JSON.stringify({ error: 'Server not found' })}\n\n`);
+    res.end();
+    return;
+  }
+
+  async function push() {
+    try {
+      const status = await proxmox.getNodeStatus();
+      const payload = {
+        cpu: status?.cpu ?? 0,
+        mem: status?.memory?.used ?? 0,
+        memTotal: status?.memory?.total ?? 0,
+        netin: status?.netin ?? 0,
+        netout: status?.netout ?? 0,
+        timestamp: Math.floor(Date.now() / 1000),
+      };
+      res.write(`data: ${JSON.stringify(payload)}\n\n`);
+    } catch {
+      res.write(`data: ${JSON.stringify({ error: 'fetch_failed' })}\n\n`);
+    }
+  }
+
+  await push();
+  const interval = setInterval(push, 5000);
+
+  req.on('close', () => {
+    clearInterval(interval);
+    res.end();
+  });
+});
+
 export default router;
+
