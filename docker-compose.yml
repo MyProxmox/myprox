@@ -40,7 +40,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-key-minimum-32-chars!!}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-key-32-chars!!}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY:-dev-encryption-key-exactly32ch!}
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3001}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3001,http://localhost:3002}
       NODE_ENV: ${NODE_ENV:-development}
       PORT: 3000
       RELAY_URL: http://relay:8080

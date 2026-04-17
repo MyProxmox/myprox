@@ -57,7 +57,7 @@ router.post('/login', async (req, res) => {
     }
 
     const result = await db.query(
-      'SELECT id, email, password_hash, plan FROM users WHERE email = $1',
+      'SELECT id, email, password_hash, plan, role FROM users WHERE email = $1',
       [email]
     );
 
@@ -82,7 +82,7 @@ router.post('/login', async (req, res) => {
     );
 
     res.json({
-      user: { id: user.id, email: user.email, plan: user.plan },
+      user: { id: user.id, email: user.email, plan: user.plan, role: user.role ?? 'user' },
       accessToken,
       refreshToken,
     });

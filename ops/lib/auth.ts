@@ -23,6 +23,13 @@ export async function login(email: string, password: string): Promise<OpsUser> {
   const response = await api.post('/api/v1/auth/login', { email, password })
   const { accessToken, refreshToken, user } = response.data
 
+  // Ops Center is admin-only
+  if (user.role !== 'admin') {
+    throw Object.assign(new Error('Forbidden'), {
+      response: { data: { message: 'Accès refusé. Le Ops Center est réservé aux administrateurs.' } },
+    })
+  }
+
   const ls = storage()
   if (ls) {
     ls.setItem('ops_access_token', accessToken)
