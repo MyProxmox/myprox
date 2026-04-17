@@ -38,7 +38,10 @@ services:
 
   # ── Ops Center Next.js ───────────────────────────────────────────────────
   ops:
+    image: ghcr.io/myproxmox/myprox/ops:main
     restart: always
+    environment:
+      NEXT_PUBLIC_API_URL: https://api.myprox.app
     logging:
       driver: json-file
       options: { max-size: "10m", max-file: "3" }
