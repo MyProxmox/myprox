@@ -55,6 +55,8 @@ postgres_data/
 
 # Next.js
 website/.next/
+ops/.next/
+ops/node_modules/
 website/out/
 
 # Cloudflare Tunnel

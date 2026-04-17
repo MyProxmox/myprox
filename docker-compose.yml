@@ -73,6 +73,18 @@ services:
       - "3001:3001"
     restart: unless-stopped
 
+  ops:
+    build:
+      context: ./ops
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      NEXT_PUBLIC_API_URL: ${API_URL:-http://api:3000}
+    depends_on:
+      - api
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   redis_data:

@@ -33,6 +33,7 @@ Dans la configuration du tunnel, onglet **Public Hostname** :
 | `@` (root) | `myprox.app` | `http://website:3001` |
 | `api` | `myprox.app` | `http://api:3000` |
 | `relay` | `myprox.app` | `http://relay:8080` |
+| `ops` | `myprox.app` | `http://ops:3002` |
 
 Cloudflare crée automatiquement les enregistrements DNS CNAME.
 

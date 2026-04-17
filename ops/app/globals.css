@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #09090f;
+  --surface: #111118;
+  --surface-2: #1a1a24;
+  --border: #27272f;
+  --accent: #7c3aed;
+  --accent-light: #8b5cf6;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a4a;
+}
+
+/* Focus ring */
+*:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+/* Glass card utility */
+.glass {
+  background: rgba(17, 17, 24, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* Progress bar animation */
+@keyframes pulse-bar {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-pulse-bar {
+  animation: pulse-bar 2s ease-in-out infinite;
+}
