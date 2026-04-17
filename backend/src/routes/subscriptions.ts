@@ -21,7 +21,22 @@ router.get('/plan', authMiddleware, async (req, res) => {
       ? { localServers: null, cloudServers: null, bandwidthGB: null }
       : { localServers: 5, cloudServers: 1, bandwidthGB: 10 };
 
-    res.json({ plan, limits });
+    const usage = await db.query(
+      `SELECT
+        COUNT(*) FILTER (WHERE mode = 'local') AS local_count,
+        COUNT(*) FILTER (WHERE mode = 'cloud') AS cloud_count
+       FROM proxmox_servers WHERE user_id = $1`,
+      [req.userId]
+    );
+
+    res.json({
+      plan,
+      limits,
+      usage: {
+        localServers: parseInt(usage.rows[0].local_count),
+        cloudServers: parseInt(usage.rows[0].cloud_count),
+      },
+    });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch plan' });
   }

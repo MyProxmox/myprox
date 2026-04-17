@@ -16,7 +16,11 @@ interface PlanLimits {
     localServers: number | null;
     cloudServers: number | null;
     bandwidthGB: number | null;
-  } | null;
+  };
+  usage: {
+    localServers: number;
+    cloudServers: number;
+  };
 }
 
 export const SettingsScreen = () => {
@@ -76,12 +80,16 @@ export const SettingsScreen = () => {
           <>
             <Row
               label={t('settings_servers_used')}
-              value={isPremium ? '∞' : `max ${planInfo.limits?.localServers}`}
+              value={isPremium
+                ? `${planInfo.usage?.localServers ?? 0} / ∞`
+                : `${planInfo.usage?.localServers ?? 0} / ${planInfo.limits?.localServers}`}
               colors={colors}
             />
             <Row
               label={t('settings_cloud_servers')}
-              value={isPremium ? '∞' : `max ${planInfo.limits?.cloudServers}`}
+              value={isPremium
+                ? `${planInfo.usage?.cloudServers ?? 0} / ∞`
+                : `${planInfo.usage?.cloudServers ?? 0} / ${planInfo.limits?.cloudServers}`}
               colors={colors}
               last
             />
