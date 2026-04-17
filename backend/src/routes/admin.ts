@@ -179,7 +179,7 @@ router.get('/users', async (req: Request, res: Response) => {
       db.query(
         `SELECT
           u.id, u.email, u.plan, u.role, u.status,
-          u.created_at, u.last_login_at, u.stripe_subscription_id,
+          u.created_at, u.last_login_at,
           u.suspended_until, u.ban_reason,
           COUNT(DISTINCT ps.id)::int AS servers_count
         FROM users u
@@ -219,7 +219,6 @@ router.get('/users/:id', async (req: Request, res: Response) => {
     const [user, servers, events] = await Promise.all([
       db.query(
         `SELECT id, email, plan, role, status, created_at, last_login_at,
-                stripe_customer_id, stripe_subscription_id, stripe_period_end,
                 suspended_until, ban_reason
          FROM users WHERE id = $1`,
         [id]

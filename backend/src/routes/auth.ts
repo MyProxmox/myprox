@@ -80,6 +80,7 @@ router.post('/login', async (req, res) => {
       "INSERT INTO sessions (user_id, access_token, refresh_token, expires_at) VALUES ($1, $2, $3, NOW() + INTERVAL '7 days')",
       [user.id, accessToken, refreshToken]
     );
+    await db.query('UPDATE users SET last_login_at = NOW() WHERE id = $1', [user.id]);
 
     res.json({
       user: { id: user.id, email: user.email, plan: user.plan, role: user.role ?? 'user' },
