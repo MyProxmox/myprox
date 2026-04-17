@@ -79,7 +79,7 @@ export const SettingsScreen = () => {
         ) : planInfo ? (
           <>
             <Row
-              label={t('settings_servers_used')}
+              label={t('settings_servers_local')}
               value={isPremium
                 ? `${planInfo.usage?.localServers ?? 0} / ∞`
                 : `${planInfo.usage?.localServers ?? 0} / ${planInfo.limits?.localServers}`}
@@ -90,6 +90,13 @@ export const SettingsScreen = () => {
               value={isPremium
                 ? `${planInfo.usage?.cloudServers ?? 0} / ∞`
                 : `${planInfo.usage?.cloudServers ?? 0} / ${planInfo.limits?.cloudServers}`}
+              colors={colors}
+            />
+            <Row
+              label={t('settings_servers_used')}
+              value={isPremium
+                ? `${(planInfo.usage?.localServers ?? 0) + (planInfo.usage?.cloudServers ?? 0)} / ∞`
+                : `${(planInfo.usage?.localServers ?? 0) + (planInfo.usage?.cloudServers ?? 0)} / ${(planInfo.limits?.localServers ?? 0) + (planInfo.limits?.cloudServers ?? 0)}`}
               colors={colors}
               last
             />
