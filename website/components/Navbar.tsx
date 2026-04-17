@@ -34,8 +34,11 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className={styles.logo} onClick={close}>
-            <div className={styles.logoMark}>M</div>
-            <span className={styles.logoText}>MyProx</span>
+            <img
+              src="https://cdn.myprox.app/img/logos/myprox-logo-purple.png"
+              alt="MyProx"
+              className={styles.logoImg}
+            />
           </Link>
 
           {/* Desktop Links */}

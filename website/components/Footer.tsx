@@ -11,11 +11,12 @@ export default function Footer() {
       <div className={`container ${styles.inner}`}>
         {/* Brand */}
         <div className={styles.brand}>
-          <div className={styles.logoMark}>M</div>
-          <div>
-            <div className={styles.logoText}>MyProx</div>
-            <div className={styles.tagline}>{t('tagline')}</div>
-          </div>
+          <img
+            src="https://cdn.myprox.app/img/logos/myprox-logo-purple.png"
+            alt="MyProx"
+            className={styles.logoImg}
+          />
+          <div className={styles.tagline}>{t('tagline')}</div>
         </div>
 
         {/* Links */}
