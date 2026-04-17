@@ -33,7 +33,7 @@
     "title": "Tout ce qu'il faut pour",
     "titleGrad": "gérer Proxmox en mobilité",
     "sub": "Une interface native, rapide et sécurisée. Tout ce que vous faites sur l'interface web Proxmox, disponible depuis votre téléphone.",
-    "0": { "title": "Mode Local", "badge": "Gratuit", "desc": "Connectez-vous directement à votre Proxmox sur votre réseau LAN. Zéro latence, zéro intermédiaire.", "t0": "LAN", "t1": "Zéro latence", "t2": "Sans compte" },
+    "0": { "title": "Mode Local", "badge": "Gratuit", "desc": "Connectez-vous directement à votre Proxmox sur votre réseau LAN. Zéro latence, zéro intermédiaire.", "t0": "LAN", "t1": "Zéro latence"},
     "1": { "title": "Cloud Relay", "badge": "Premium", "desc": "Accédez depuis n'importe où via notre tunnel WebSocket chiffré. Votre IP Proxmox reste privée.", "t0": "AES-256", "t1": "WebSocket", "t2": "Partout" },
     "2": { "title": "Console VNC", "badge": "Nouveau", "desc": "Pilotez la console graphique de vos VMs directement depuis votre téléphone. Mode paysage auto.", "t0": "NoVNC", "t1": "WebView", "t2": "Natif" },
     "3": { "title": "Contrôle total", "badge": "Gratuit", "desc": "Start, Stop, Restart vos VMs et containers LXC. Monitoring CPU & RAM en temps réel.", "t0": "VM", "t1": "LXC", "t2": "Monitoring" },

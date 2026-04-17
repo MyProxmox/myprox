@@ -33,7 +33,7 @@
     "title": "Everything you need to",
     "titleGrad": "manage Proxmox on the go",
     "sub": "A native, fast and secure interface. Everything you do on the Proxmox web UI, available from your phone.",
-    "0": { "title": "Local Mode", "badge": "Free", "desc": "Connect directly to your Proxmox on your LAN network. Zero latency, zero middleman.", "t0": "LAN", "t1": "Zero latency", "t2": "No account" },
+    "0": { "title": "Local Mode", "badge": "Free", "desc": "Connect directly to your Proxmox on your LAN network. Zero latency, zero middleman.", "t0": "LAN", "t1": "Zero latency"},
     "1": { "title": "Cloud Relay", "badge": "Premium", "desc": "Access from anywhere via our encrypted WebSocket tunnel. Your Proxmox IP stays private.", "t0": "AES-256", "t1": "WebSocket", "t2": "Anywhere" },
     "2": { "title": "VNC Console", "badge": "New", "desc": "Control the graphical console of your VMs directly from your phone. Auto-landscape mode.", "t0": "NoVNC", "t1": "WebView", "t2": "Native" },
     "3": { "title": "Full Control", "badge": "Free", "desc": "Start, Stop, Restart your VMs and LXC containers. Real-time CPU & RAM monitoring.", "t0": "VM", "t1": "LXC", "t2": "Monitoring" },
