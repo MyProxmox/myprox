@@ -1,542 +1,307 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
-import { Server, Monitor, MemoryStick, Activity, Info, AlertTriangle, XCircle, ExternalLink } from 'lucide-react'
-import Header from '@/components/Header'
-import StatCard from '@/components/StatCard'
-import LiveMetricsBanner from '@/components/LiveMetricsBanner'
-import { useOpsStore, NodeStatus, Server as ServerItem } from '@/lib/store'
+import { useEffect, useState, useCallback } from 'react'
+import Link from 'next/link'
+import {
+  Users, CreditCard, TrendingUp, TrendingDown,
+  Server, ShieldX, Clock, Activity,
+  ArrowUpRight, RefreshCw
+} from 'lucide-react'
+import api from '@/lib/api'
+import {
+  LineChart, Line, XAxis, YAxis, Tooltip,
+  ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell
+} from 'recharts'
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-function formatBytes(bytes: number): string {
-  if (!bytes) return '0 B'
-  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
-  const i = Math.floor(Math.log(bytes) / Math.log(1024))
-  return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`
+interface OverviewStats {
+  totalUsers: number
+  newThisWeek: number
+  newThisMonth: number
+  growthRate: number | null
+  premiumUsers: number
+  bannedUsers: number
+  suspendedUsers: number
+  totalServers: number
+  activeUsers30d: number
 }
 
-function formatUptime(seconds: number): string {
-  if (!seconds) return '—'
-  const days = Math.floor(seconds / 86400)
-  const hours = Math.floor((seconds % 86400) / 3600)
-  if (days > 0) return `${days}j ${hours}h`
-  const mins = Math.floor((seconds % 3600) / 60)
-  return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
-}
+interface SignupPoint { period: string; count: number }
 
-function ProgressBar({
-  value,
-  color = 'var(--accent)',
-  height = 6,
+function KpiCard({
+  label, value, sub, icon: Icon, accent, href,
 }: {
-  value: number
-  color?: string
-  height?: number
+  label: string; value: string | number; sub?: string
+  icon: React.ElementType; accent?: string; href?: string
 }) {
-  const pct = Math.min(100, Math.max(0, value))
-  const dynamicColor =
-    pct > 90
-      ? 'var(--error)'
-      : pct > 70
-      ? 'var(--warning)'
-      : color
-
-  return (
-    <div
-      style={{
-        height,
-        background: 'var(--surface-2)',
-        borderRadius: height,
-        overflow: 'hidden',
-        width: '100%',
-      }}
-    >
-      <div
-        style={{
-          height: '100%',
-          width: `${pct}%`,
-          background: dynamicColor,
-          borderRadius: height,
-          transition: 'width 0.4s ease',
-        }}
-      />
-    </div>
-  )
-}
-
-// ─── Server card ─────────────────────────────────────────────────────────────
-
-function ServerCard({
-  server,
-  nodeStatus,
-}: {
-  server: ServerItem
-  nodeStatus?: NodeStatus
-}) {
-  const isOnline = !!nodeStatus
-  const cpuPct = nodeStatus ? Math.round((nodeStatus.status?.cpu || 0) * 100) : 0
-  const memTotal = nodeStatus?.status?.memory?.total || 0
-  const memUsed = nodeStatus?.status?.memory?.used || 0
-  const memPct = memTotal > 0 ? Math.round((memUsed / memTotal) * 100) : 0
-
-  return (
+  const card = (
     <div
       style={{
         background: 'var(--surface)',
         border: '1px solid var(--border)',
         borderRadius: 12,
-        padding: '18px 20px',
+        padding: '20px 24px',
         display: 'flex',
         flexDirection: 'column',
-        gap: 14,
-        transition: 'border-color 0.15s',
+        gap: 8,
+        transition: 'border-color 0.2s',
+        cursor: href ? 'pointer' : 'default',
       }}
+      onMouseEnter={(e) => href && (e.currentTarget.style.borderColor = 'var(--accent)')}
+      onMouseLeave={(e) => href && (e.currentTarget.style.borderColor = 'var(--border)')}
     >
-      {/* Header row */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>
-              {server.name}
-            </span>
-            {/* Status badge */}
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                padding: '2px 8px',
-                borderRadius: 20,
-                background: isOnline
-                  ? 'rgba(16, 185, 129, 0.12)'
-                  : 'rgba(239, 68, 68, 0.12)',
-                color: isOnline ? 'var(--success)' : 'var(--error)',
-                border: `1px solid ${isOnline ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
-              }}
-            >
-              {isOnline ? 'Online' : 'Offline'}
-            </span>
-          </div>
-          <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
-            {server.host}
-            {server.mode && (
-              <span
-                style={{
-                  marginLeft: 8,
-                  fontSize: 10,
-                  padding: '1px 6px',
-                  borderRadius: 4,
-                  background: 'var(--surface-2)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--text-muted)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                }}
-              >
-                {server.mode}
-              </span>
-            )}
-            {server.type && (
-              <span
-                style={{
-                  marginLeft: 4,
-                  fontSize: 10,
-                  padding: '1px 6px',
-                  borderRadius: 4,
-                  background: 'rgba(124, 58, 237, 0.1)',
-                  border: '1px solid rgba(124, 58, 237, 0.25)',
-                  color: 'var(--accent-light)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                }}
-              >
-                {server.type}
-              </span>
-            )}
-          </p>
-        </div>
-        <a
-          href={`/servers/${server.id}`}
-          style={{
-            color: 'var(--text-muted)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 4,
-            fontSize: 12,
-            textDecoration: 'none',
-            padding: '4px 8px',
-            borderRadius: 6,
-            background: 'var(--surface-2)',
-            border: '1px solid var(--border)',
-            transition: 'all 0.15s',
-          }}
-        >
-          <ExternalLink size={12} />
-          Détails
-        </a>
-      </div>
-
-      {/* Metrics — only if online */}
-      {isOnline && nodeStatus ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {/* CPU */}
-          <div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: 4,
-              }}
-            >
-              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>CPU</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>
-                {cpuPct}%
-              </span>
-            </div>
-            <ProgressBar value={cpuPct} color="var(--accent)" />
-          </div>
-
-          {/* RAM */}
-          <div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: 4,
-              }}
-            >
-              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>RAM</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>
-                {formatBytes(memUsed)} / {formatBytes(memTotal)} ({memPct}%)
-              </span>
-            </div>
-            <ProgressBar value={memPct} color="var(--success)" />
-          </div>
-
-          {/* Uptime */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              paddingTop: 4,
-              borderTop: '1px solid var(--border)',
-            }}
-          >
-            <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Uptime</span>
-            <span style={{ fontSize: 12, color: 'var(--text)' }}>
-              {formatUptime(nodeStatus.status?.uptime || 0)}
-            </span>
-          </div>
-        </div>
-      ) : (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{label}</span>
         <div
           style={{
-            fontSize: 13,
-            color: 'var(--text-muted)',
-            textAlign: 'center',
-            padding: '8px 0',
+            width: 36, height: 36, borderRadius: 8,
+            background: accent || 'rgba(124,58,237,0.12)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
         >
-          Métriques indisponibles
+          <Icon size={18} style={{ color: accent ? '#fff' : 'var(--accent)' }} />
         </div>
-      )}
-    </div>
-  )
-}
-
-// ─── Activity Feed ────────────────────────────────────────────────────────────
-
-function severityIcon(severity: string) {
-  switch (severity) {
-    case 'error':
-      return <XCircle size={14} style={{ color: 'var(--error)', flexShrink: 0 }} />
-    case 'warning':
-      return <AlertTriangle size={14} style={{ color: 'var(--warning)', flexShrink: 0 }} />
-    default:
-      return <Info size={14} style={{ color: 'var(--accent-light)', flexShrink: 0 }} />
-  }
-}
-
-function ActivityFeed() {
-  const events = useOpsStore((s) => s.clusterEvents)
-
-  if (!events.length) {
-    return (
-      <div
-        style={{
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 12,
-          padding: 24,
-          textAlign: 'center',
-          color: 'var(--text-muted)',
-          fontSize: 13,
-        }}
-      >
-        Aucun événement récent disponible.
       </div>
-    )
-  }
-
-  return (
-    <div
-      style={{
-        background: 'var(--surface)',
-        border: '1px solid var(--border)',
-        borderRadius: 12,
-        overflow: 'hidden',
-      }}
-    >
-      {events.map((event, idx) => (
-        <div
-          key={idx}
-          style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 12,
-            padding: '12px 16px',
-            borderBottom: idx < events.length - 1 ? '1px solid var(--border)' : 'none',
-            transition: 'background 0.1s',
-          }}
-        >
-          {severityIcon(event.severity)}
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p
-              style={{
-                fontSize: 13,
-                color: 'var(--text)',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {event.description}
-            </p>
-            <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
-              {event.node}
-              {event.user ? ` · ${event.user}` : ''}
-            </p>
-          </div>
-          <span
-            style={{
-              fontSize: 11,
-              color: 'var(--text-muted)',
-              flexShrink: 0,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {event.time
-              ? new Date(event.time * 1000).toLocaleTimeString('fr-FR', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })
-              : '—'}
-          </span>
-        </div>
-      ))}
+      <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text)', lineHeight: 1 }}>
+        {value}
+      </div>
+      {sub && <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{sub}</div>}
     </div>
   )
+  return href ? <Link href={href} style={{ textDecoration: 'none' }}>{card}</Link> : card
 }
 
-// ─── Main page ────────────────────────────────────────────────────────────────
+const PLAN_COLORS = ['#6366f1', '#7C3AED', '#10b981']
 
 export default function DashboardPage() {
-  const {
-    servers,
-    vms,
-    nodeStatuses,
-    isLoadingServers,
-    fetchServers,
-    fetchVMs,
-    fetchNodeStatus,
-    fetchClusterEvents,
-  } = useOpsStore()
+  const [stats, setStats] = useState<OverviewStats | null>(null)
+  const [signups, setSignups] = useState<SignupPoint[]>([])
+  const [period, setPeriod] = useState<'30d' | '90d' | '12m'>('30d')
+  const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
 
-  const loadAll = useCallback(async () => {
-    await fetchServers()
-    const currentServers = useOpsStore.getState().servers
-    await Promise.all(
-      currentServers.map((s: ServerItem) =>
-        Promise.all([fetchNodeStatus(s.id), fetchVMs(s.id)])
-      )
-    )
-    if (currentServers.length > 0) {
-      await fetchClusterEvents(currentServers[0].id)
+  const load = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true)
+    try {
+      const [overviewRes, signupsRes] = await Promise.all([
+        api.get('/api/v1/admin/stats/overview'),
+        api.get(`/api/v1/admin/stats/signups?period=${period}`),
+      ])
+      setStats(overviewRes.data)
+      setSignups(signupsRes.data)
+    } catch (e) {
+      console.error('Dashboard load error', e)
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
     }
-  }, [fetchServers, fetchVMs, fetchNodeStatus, fetchClusterEvents])
+  }, [period])
 
-  useEffect(() => {
-    loadAll()
-  }, [loadAll])
+  useEffect(() => { load() }, [load])
 
-  // Computed stats
-  const totalServers = servers.length
-  const onlineServers = servers.filter((s: ServerItem) => !!nodeStatuses[s.id]).length
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+        <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
+          <Activity size={32} style={{ animation: 'pulse 1.5s infinite' }} />
+          <p style={{ marginTop: 12, fontSize: 14 }}>Chargement…</p>
+        </div>
+      </div>
+    )
+  }
 
-  const totalVMs = Object.values(vms).reduce((acc, list) => acc + list.length, 0)
-
-  const totalMemUsed = Object.values(nodeStatuses).reduce(
-    (acc: number, ns: NodeStatus) => acc + (ns.status?.memory?.used || 0),
-    0
-  )
-  const totalMemTotal = Object.values(nodeStatuses).reduce(
-    (acc: number, ns: NodeStatus) => acc + (ns.status?.memory?.total || 0),
-    0
-  )
-  const memUsageStr =
-    totalMemTotal > 0
-      ? `${formatBytes(totalMemUsed)} / ${formatBytes(totalMemTotal)}`
-      : '—'
-
-  const firstOnlineServer = servers.find((s: ServerItem) => nodeStatuses[s.id])
+  const planData = stats ? [
+    { name: 'Free', value: stats.totalUsers - stats.premiumUsers },
+    { name: 'Premium', value: stats.premiumUsers },
+  ].filter(d => d.value > 0) : []
 
   return (
-    <>
-      <Header title="Tableau de bord" onRefresh={loadAll} />
-      {firstOnlineServer && <LiveMetricsBanner serverId={firstOnlineServer.id} />}
-
-      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: 28 }}>
-        {/* ── Stat cards ── */}
-        <div
+    <div style={{ padding: '32px 32px 48px', maxWidth: 1280, margin: '0 auto' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
+        <div>
+          <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text)', margin: 0 }}>
+            Tableau de bord
+          </h1>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4 }}>
+            Vue d&apos;ensemble de MyProx
+          </p>
+        </div>
+        <button
+          onClick={() => load(true)}
+          disabled={refreshing}
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: 16,
+            display: 'flex', alignItems: 'center', gap: 6,
+            padding: '8px 16px', borderRadius: 8, fontSize: 13,
+            background: 'var(--surface-2)', border: '1px solid var(--border)',
+            color: 'var(--text-muted)', cursor: 'pointer',
           }}
         >
-          <StatCard
-            title="Serveurs"
-            value={totalServers}
-            subtitle={`${onlineServers} en ligne`}
-            icon={Server}
-            iconColor="var(--accent)"
-            loading={isLoadingServers}
+          <RefreshCw size={14} style={{ animation: refreshing ? 'spin 1s linear infinite' : 'none' }} />
+          Actualiser
+        </button>
+      </div>
+
+      {/* KPI Grid */}
+      {stats && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 32 }}>
+          <KpiCard
+            label="Utilisateurs total" value={stats.totalUsers.toLocaleString()}
+            sub={`${stats.activeUsers30d} actifs (30j)`} icon={Users} href="/users"
           />
-          <StatCard
-            title="VMs & Containers"
-            value={totalVMs}
-            subtitle="Toutes instances"
-            icon={Monitor}
-            iconColor="var(--success)"
-            loading={isLoadingServers}
+          <KpiCard
+            label="Nouveaux ce mois" value={`+${stats.newThisMonth}`}
+            sub={stats.growthRate !== null
+              ? stats.growthRate >= 0
+                ? `↑ +${stats.growthRate}% vs mois précédent`
+                : `↓ ${stats.growthRate}% vs mois précédent`
+              : `+${stats.newThisWeek} cette semaine`
+            }
+            icon={stats.growthRate !== null && stats.growthRate >= 0 ? TrendingUp : TrendingDown}
           />
-          <StatCard
-            title="RAM globale"
-            value={totalMemTotal > 0 ? `${Math.round((totalMemUsed / totalMemTotal) * 100)}%` : '—'}
-            subtitle={memUsageStr}
-            icon={MemoryStick}
-            iconColor="var(--warning)"
-            loading={isLoadingServers}
+          <KpiCard
+            label="Abonnés Premium" value={stats.premiumUsers}
+            sub={`MRR estimé : €${(stats.premiumUsers * 8).toFixed(0)}/mois`}
+            icon={CreditCard} href="/subscriptions"
           />
-          <StatCard
-            title="Activité"
-            value={useOpsStore.getState().clusterEvents.length}
-            subtitle="Événements récents"
-            icon={Activity}
-            iconColor="var(--accent-light)"
-            loading={isLoadingServers}
+          <KpiCard
+            label="Serveurs connectés" value={stats.totalServers}
+            sub="Nx toutes les proxmox" icon={Server}
+          />
+          <KpiCard
+            label="Comptes bannis" value={stats.bannedUsers}
+            sub={`${stats.suspendedUsers} suspendu${stats.suspendedUsers > 1 ? 's' : ''}`}
+            icon={ShieldX} href="/users?status=banned"
+          />
+          <KpiCard
+            label="Suspensions actives" value={stats.suspendedUsers}
+            sub="Accès temporairement bloqué" icon={Clock} href="/users?status=suspended"
           />
         </div>
+      )}
 
-        {/* ── Server grid ── */}
-        <section>
-          <h2
-            style={{
-              fontSize: 14,
-              fontWeight: 600,
-              color: 'var(--text-muted)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              marginBottom: 14,
-            }}
-          >
-            Infrastructure
-          </h2>
-          {isLoadingServers ? (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                gap: 16,
-              }}
-            >
-              {[1, 2].map((i) => (
-                <div
-                  key={i}
+      {/* Charts row */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 20, marginBottom: 32 }}>
+        {/* Signups chart */}
+        <div style={{
+          background: 'var(--surface)', border: '1px solid var(--border)',
+          borderRadius: 12, padding: 24,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+            <h2 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', margin: 0 }}>
+              Inscriptions
+            </h2>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {(['30d', '90d', '12m'] as const).map((p) => (
+                <button
+                  key={p} onClick={() => setPeriod(p)}
                   style={{
-                    background: 'var(--surface)',
+                    padding: '4px 10px', borderRadius: 6, fontSize: 12,
+                    background: period === p ? 'var(--accent)' : 'var(--surface-2)',
                     border: '1px solid var(--border)',
-                    borderRadius: 12,
-                    height: 180,
-                    animation: 'shimmer 1.5s infinite',
+                    color: period === p ? '#fff' : 'var(--text-muted)',
+                    cursor: 'pointer',
                   }}
-                />
+                >
+                  {p === '30d' ? '30 jours' : p === '90d' ? '3 mois' : '12 mois'}
+                </button>
               ))}
             </div>
-          ) : servers.length === 0 ? (
-            <div
-              style={{
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 12,
-                padding: 40,
-                textAlign: 'center',
-                color: 'var(--text-muted)',
-                fontSize: 14,
-              }}
-            >
-              <Server
-                size={32}
-                style={{ margin: '0 auto 12px', opacity: 0.4 }}
+          </div>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={signups}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis
+                dataKey="period"
+                tickFormatter={(v) => v?.toString().slice(5, 10) || v}
+                tick={{ fill: 'var(--text-muted)', fontSize: 11 }}
               />
-              <p>Aucun serveur configuré.</p>
-              <p style={{ fontSize: 12, marginTop: 4 }}>
-                Ajoutez un serveur Proxmox depuis l&apos;application mobile.
-              </p>
-            </div>
-          ) : (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                gap: 16,
-              }}
-            >
-              {servers.map((server: ServerItem) => (
-                <ServerCard
-                  key={server.id}
-                  server={server}
-                  nodeStatus={nodeStatuses[server.id]}
-                />
-              ))}
-            </div>
-          )}
-        </section>
+              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8 }}
+                labelStyle={{ color: 'var(--text)', fontSize: 12 }}
+                itemStyle={{ color: 'var(--accent-light)', fontSize: 12 }}
+              />
+              <Line type="monotone" dataKey="count" stroke="var(--accent)" strokeWidth={2} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
 
-        {/* ── Activity feed ── */}
-        <section>
-          <h2
+        {/* Plan distribution donut */}
+        <div style={{
+          background: 'var(--surface)', border: '1px solid var(--border)',
+          borderRadius: 12, padding: 24,
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+        }}>
+          <h2 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', margin: '0 0 16px', alignSelf: 'flex-start' }}>
+            Plans
+          </h2>
+          <PieChart width={180} height={180}>
+            <Pie data={planData} cx={90} cy={90} innerRadius={55} outerRadius={80} dataKey="value">
+              {planData.map((_, i) => (
+                <Cell key={i} fill={PLAN_COLORS[i % PLAN_COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip
+              contentStyle={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8 }}
+              itemStyle={{ color: 'var(--text)', fontSize: 12 }}
+            />
+          </PieChart>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 12 }}>
+            {planData.map((d, i) => (
+              <div key={d.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: 2, background: PLAN_COLORS[i] }} />
+                  <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{d.name}</span>
+                </div>
+                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
+                  {d.value} ({stats ? Math.round((d.value / stats.totalUsers) * 100) : 0}%)
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Quick links */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
+        {[
+          { href: '/users', label: 'Gérer les utilisateurs', sub: 'Ban, suspension, plans' },
+          { href: '/subscriptions', label: 'Abonnements Stripe', sub: 'Revenus et paiements' },
+          { href: '/activity', label: "Journal d'activité", sub: 'Logs admin et système' },
+          { href: '/analytics', label: 'Analytics détaillées', sub: 'Rétention, fréquence' },
+        ].map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
             style={{
-              fontSize: 14,
-              fontWeight: 600,
-              color: 'var(--text-muted)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              marginBottom: 14,
+              background: 'var(--surface)', border: '1px solid var(--border)',
+              borderRadius: 10, padding: '16px 20px',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              textDecoration: 'none', color: 'var(--text)',
+              transition: 'border-color 0.2s, background 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--accent)'
+              e.currentTarget.style.background = 'rgba(124,58,237,0.06)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border)'
+              e.currentTarget.style.background = 'var(--surface)'
             }}
           >
-            Activité récente
-          </h2>
-          <ActivityFeed />
-        </section>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 600 }}>{item.label}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{item.sub}</div>
+            </div>
+            <ArrowUpRight size={16} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+          </Link>
+        ))}
       </div>
 
       <style jsx global>{`
-        @keyframes shimmer {
-          0%, 100% { opacity: 0.5; }
-          50% { opacity: 1; }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
       `}</style>
-    </>
+    </div>
   )
 }

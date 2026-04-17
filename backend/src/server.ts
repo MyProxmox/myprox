@@ -13,6 +13,7 @@ import cloudRoutes from './routes/cloud';
 import nodeRoutes from './routes/nodes';
 import pbsRoutes from './routes/pbs';
 import stripeRoutes from './routes/stripe';
+import adminRoutes from './routes/admin';
 import { apiLimiter, authLimiter } from './middleware/rateLimiter';
 import { errorHandler } from './middleware/errorHandler';
 
@@ -49,6 +50,7 @@ app.use('/api/v1/cloud', cloudRoutes);
 app.use('/api/v1/servers', nodeRoutes);
 app.use('/api/v1/servers', pbsRoutes);
 app.use('/api/v1/stripe', stripeRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 // Global error handler (must be last)
 app.use(errorHandler);

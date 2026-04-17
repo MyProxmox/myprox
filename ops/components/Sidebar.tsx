@@ -5,11 +5,11 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
-  Monitor,
-  Server,
-  Database,
-  Settings,
   Users,
+  CreditCard,
+  BarChart2,
+  ScrollText,
+  Settings,
   LogOut,
 } from 'lucide-react'
 import { logout, getUser } from '@/lib/auth'
@@ -22,21 +22,27 @@ const NAV_ITEMS = [
     disabled: false,
   },
   {
-    label: 'VMs & LXC',
-    href: '/vms',
-    icon: Monitor,
+    label: 'Utilisateurs',
+    href: '/users',
+    icon: Users,
     disabled: false,
   },
   {
-    label: 'Nœuds',
-    href: '/nodes',
-    icon: Server,
+    label: 'Abonnements',
+    href: '/subscriptions',
+    icon: CreditCard,
     disabled: false,
   },
   {
-    label: 'Sauvegardes PBS',
-    href: '/backups',
-    icon: Database,
+    label: 'Analytics',
+    href: '/analytics',
+    icon: BarChart2,
+    disabled: false,
+  },
+  {
+    label: "Journal d'activité",
+    href: '/activity',
+    icon: ScrollText,
     disabled: false,
   },
 ]
