@@ -91,13 +91,6 @@ export const SettingsScreen = () => {
                 ? `${planInfo.usage?.cloudServers ?? 0} / ∞`
                 : `${planInfo.usage?.cloudServers ?? 0} / ${planInfo.limits?.cloudServers}`}
               colors={colors}
-            />
-            <Row
-              label={t('settings_servers_used')}
-              value={isPremium
-                ? `${(planInfo.usage?.localServers ?? 0) + (planInfo.usage?.cloudServers ?? 0)} / ∞`
-                : `${(planInfo.usage?.localServers ?? 0) + (planInfo.usage?.cloudServers ?? 0)} / ${(planInfo.limits?.localServers ?? 0) + (planInfo.limits?.cloudServers ?? 0)}`}
-              colors={colors}
               last
             />
           </>
