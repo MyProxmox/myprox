@@ -85,6 +85,17 @@ services:
       - api
     restart: unless-stopped
 
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - api
+      - website
+      - ops
+    networks:
+      - default
+
 volumes:
   postgres_data:
   redis_data:
